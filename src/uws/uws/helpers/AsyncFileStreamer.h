@@ -26,9 +26,13 @@ struct AsyncFileStreamer {
 
     template <bool SSL>
     void streamFile(uWS::HttpResponse<SSL> *res, std::string_view url) {
+		#define FMT_404 "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\"><html><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL %.*s was not found on this server.</p></body></html>"
         auto it = asyncFileReaders.find(url);
         if (it == asyncFileReaders.end()) {
+			char RES_404[SHRT_MAX] = { 0 };
             std::cout << "Did not find file: " << url << std::endl;
+			snprintf(RES_404, sizeof(RES_404), FMT_404, url.length(), url.data());
+			res->tryEnd(std::string_view(RES_404, strlen(RES_404)));
         } else {
             streamFile(res, it->second);
         }
