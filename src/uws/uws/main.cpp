@@ -15,30 +15,73 @@
 #include "curl_helper.h"
 #include "signal_handler.h"
 
-int main(int argc, char** argv) 
+#include <unordered_map>
+
+std::string test_chart()
 {
+	std::string X = "";
+	std::string Y = "";
+	std::string T = "";
+	std::unordered_map<std::string, std::string> umap = {
+		{"20191119", ""},
+		{"20191118", ""},
+		{"20191115", ""},
+		{"20191114", ""},
+	};
+	X.append("[");
+	Y.append("[");
+	for (auto& it : umap)
 	{
 		std::string data("");
-		file_reader(data, "/usr/share/nginx/html/foot-wash/storage/app/images/edc/20191119/dce.csv");
-		if (data.length() <= 0)
+		//file_reader(data, "./dce.csv");
+		//file_reader(data, "/usr/share/nginx/html/foot-wash/storage/app/images/edc/" + it.first + "/dce.csv");
+		file_reader(data, "./" + it.first + "/dce.csv");
+		if (data.length() > 0)
 		{
+			bool flag = false;
 			std::string result("");
-			std::string pattern1 = "ºÏÔ¼´úÂë£º(.*?),,Date£º(.*?),\r\n";
-			std::string pattern2 = "×Ü¼Æ,,,,(.*?),,(.*?),,\r\n";
+			std::string pattern1 = "åˆçº¦ä»£ç ï¼š(.*?),Dateï¼š(.*?),\r\n";
+			std::string pattern2 = "æ€»è®¡,(.*?),(.*?),\r\n";
 			std::vector<std::vector<std::string>> svv1;
-			std::string out(data.size() * 3, '\0');
+			std::vector<std::vector<std::string>> svv2;
+			std::string out(data.size() * 4, '\0');
 			size_t in_len = data.size();
 			size_t out_len = out.size();
-			bool flag = gb2312_to_utf8((char *)data.c_str(), &in_len, (char *)out.c_str(), &out_len);
+			flag = gb2312_to_utf8((char*)data.c_str(), &in_len, (char*)out.c_str(), &out_len);
 			printf("flag = %d\n", flag);
-			string_regex_find(result, svv1, out.c_str(), pattern1);
+			flag = string_regex_find(result, svv1, out.c_str(), pattern1);
+			printf("flag = %d\n", flag);
 			if (svv1.size())
 			{
-				printf("%s,%s\n", svv1.begin()->at(0).c_str(), svv1.begin()->at(1).c_str());
+				T = svv1.at(0).at(0).c_str();
+				printf("%s,%s\n", svv1.at(0).at(0).c_str(), svv1.at(1).at(0).c_str());
 			}
+			flag = string_regex_find(result, svv2, out.c_str(), pattern2);
+			printf("flag = %d\n", flag);
+			if (svv2.size())
+			{
+				printf("%s,%s\n", svv2.at(0).at(0).c_str(), svv2.at(1).at(0).c_str());
+			}
+			it.second = svv2.at(1).at(0);
+			X.append("'").append(it.first).append("',");
+			Y.append("'").append(it.second).append("',");
+			T = svv1.at(0).at(0).c_str();
 		}
-		return 0;
 	}
+
+	*X.rbegin() = ']';
+	*Y.rbegin() = ']';
+	std::string temp;
+	file_reader(temp, "chart.html");
+	string_replace_all(temp, X, "BBBBBB");
+	string_replace_all(temp, Y, "AAAAAA");
+	file_writer(temp, T + ".html");
+	return temp;
+}
+int main(int argc, char** argv) 
+{
+	//test_chart();
+	//return 0;
 	int option;
 	struct optparse options;
 	optparse_init(&options, argv);
@@ -109,25 +152,7 @@ int main(int argc, char** argv)
 			res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("Hello HTTP!");
 				})
 			.get("/chart", [](auto* res, auto* req) {
-					std::string data("");
-					file_reader(data, "/usr/share/nginx/html/foot-wash/storage/app/images/edc/20191119/dce.csv");
-					if (data.length() <= 0)
-					{
-						std::string result("");
-						std::string pattern1 = "ºÏÔ¼´úÂë£º(.*?),,Date£º(.*?),\r\n";
-						std::string pattern2 = "×Ü¼Æ,,,,(.*?),,(.*?),,\r\n";
-						std::vector<std::vector<std::string>> svv1;
-						string_regex_find(result, svv1, data, pattern1);
-						if (svv1.size())
-						{
-							printf("%s,%s\n", svv1.begin()->at(0).c_str(), svv1.begin()->at(1).c_str());
-						}
-						res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("no data!");
-					}
-					else
-					{
-						res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("Hello HTTP!");
-					}
+					res->writeHeader("Content-Type", "text/html; charset=utf-8")->end(test_chart().c_str());
 				})
 			.get("/*", [&asyncFileStreamer](auto* res, auto* req) {
 				serveFile(res, req);

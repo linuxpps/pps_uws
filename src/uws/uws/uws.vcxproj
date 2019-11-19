@@ -125,13 +125,6 @@
   <ItemGroup>
     <None Include="..\uWebSockets\Makefile" />
     <None Include="..\uWebSockets\uSockets\Makefile" />
-    <None Include="cffex.csv" />
-    <None Include="czce.csv" />
-    <None Include="dce.csv" />
-    <None Include="shfe.csv" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="favicon.ico" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
@@ -142,6 +135,10 @@
     <Link>
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
+    <RemotePostBuildEvent>
+      <Command>
+      </Command>
+    </RemotePostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <ClCompile>
@@ -152,6 +149,10 @@
     <Link>
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
+    <RemotePostBuildEvent>
+      <Command>
+      </Command>
+    </RemotePostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
     <ClCompile>
@@ -162,6 +163,10 @@
     <Link>
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
+    <RemotePostBuildEvent>
+      <Command>
+      </Command>
+    </RemotePostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <ClCompile>
@@ -172,6 +177,10 @@
     <Link>
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
+    <RemotePostBuildEvent>
+      <Command>
+      </Command>
+    </RemotePostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -182,6 +191,10 @@
     <Link>
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
+    <RemotePostBuildEvent>
+      <Command>
+      </Command>
+    </RemotePostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -192,6 +205,10 @@
     <Link>
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
+    <RemotePostBuildEvent>
+      <Command>
+      </Command>
+    </RemotePostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <ClCompile>
@@ -202,6 +219,10 @@
     <Link>
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
+    <RemotePostBuildEvent>
+      <Command>
+      </Command>
+    </RemotePostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
     <ClCompile>
@@ -212,6 +233,10 @@
     <Link>
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
+    <RemotePostBuildEvent>
+      <Command>
+      </Command>
+    </RemotePostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

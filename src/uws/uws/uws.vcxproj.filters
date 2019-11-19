@@ -167,12 +167,5 @@
     <None Include="..\uWebSockets\uSockets\Makefile">
       <Filter>uWebSockets\uSockets</Filter>
     </None>
-    <None Include="dce.csv" />
-    <None Include="cffex.csv" />
-    <None Include="czce.csv" />
-    <None Include="shfe.csv" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="favicon.ico" />
   </ItemGroup>
 </Project>

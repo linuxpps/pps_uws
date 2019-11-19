@@ -78,6 +78,7 @@
 #endif
 
 #include <iconv.h>
+__inline static
 bool unicode_to_utf8(char* inbuf, size_t* inlen, char* outbuf, size_t* outlen)
 {
 	/* 目的编码, TRANSLIT：遇到无法转换的字符就找相近字符替换
@@ -98,10 +99,10 @@ bool unicode_to_utf8(char* inbuf, size_t* inlen, char* outbuf, size_t* outlen)
 	}
 
 	/* 需要转换的字符串 */
-	printf("inbuf=%s\n", inbuf);
+	//printf("inbuf=%s\n", inbuf);
 
 	/* 打印需要转换的字符串的长度 */
-	printf("inlen=%d\n", *inlen);
+	//printf("inlen=%d\n", *inlen);
 
 
 	/* 由于iconv()函数会修改指针，所以要保存源指针 */
@@ -125,17 +126,17 @@ bool unicode_to_utf8(char* inbuf, size_t* inlen, char* outbuf, size_t* outlen)
 	}
 
 	/* 存放转换后的字符串 */
-	printf("outbuf=%s\n", outbuf);
+	//printf("outbuf=%s\n", outbuf);
 
 	//存放转换后outbuf剩余的空间
-	printf("outlen=%d\n", *outlen);
+	//printf("outlen=%d\n", *outlen);
 
 	int i = 0;
 
-	for (i = 0; i < (outsize - (*outlen)); i++)
+	//for (i = 0; i < (outsize - (*outlen)); i++)
 	{
 		//printf("%2c", outbuf[i]);
-		printf("%x\n", outbuf[i]);
+		//printf("%x\n", outbuf[i]);
 	}
 
 	/* 关闭句柄 */
@@ -143,6 +144,7 @@ bool unicode_to_utf8(char* inbuf, size_t* inlen, char* outbuf, size_t* outlen)
 
 	return 0;
 }
+__inline static
 bool utf8_to_unicode(char* inbuf, size_t* inlen, char* outbuf, size_t* outlen)
 {
 
@@ -164,10 +166,10 @@ bool utf8_to_unicode(char* inbuf, size_t* inlen, char* outbuf, size_t* outlen)
 	}
 
 	/* 需要转换的字符串 */
-	printf("inbuf=%s\n", inbuf);
+	//printf("inbuf=%s\n", inbuf);
 
 	/* 打印需要转换的字符串的长度 */
-	printf("inlen=%d\n", *inlen);
+	//printf("inlen=%d\n", *inlen);
 
 	/* 由于iconv()函数会修改指针，所以要保存源指针 */
 	char* tmpin = inbuf;
@@ -190,17 +192,17 @@ bool utf8_to_unicode(char* inbuf, size_t* inlen, char* outbuf, size_t* outlen)
 	}
 
 	/* 存放转换后的字符串 */
-	printf("outbuf=%s\n", outbuf);
+	//printf("outbuf=%s\n", outbuf);
 
 	//存放转换后outbuf剩余的空间
-	printf("outlen=%d\n", *outlen);
+	//printf("outlen=%d\n", *outlen);
 
 	int i = 0;
 
-	for (i = 0; i < (outsize - (*outlen)); i++)
+	//for (i = 0; i < (outsize - (*outlen)); i++)
 	{
 		//printf("%2c", outbuf[i]);
-		printf("%x\n", outbuf[i]);
+		//printf("%x\n", outbuf[i]);
 	}
 
 	/* 关闭句柄 */
@@ -208,6 +210,7 @@ bool utf8_to_unicode(char* inbuf, size_t* inlen, char* outbuf, size_t* outlen)
 
 	return 0;
 }
+__inline static
 bool gb2312_to_utf8(char* inbuf, size_t* inlen, char* outbuf, size_t* outlen)
 {
 	/* 目的编码, TRANSLIT：遇到无法转换的字符就找相近字符替换
@@ -228,10 +231,10 @@ bool gb2312_to_utf8(char* inbuf, size_t* inlen, char* outbuf, size_t* outlen)
 	}
 
 	/* 需要转换的字符串 */
-	printf("inbuf=%s\n", inbuf);
+	//printf("inbuf=%s\n", inbuf);
 
 	/* 打印需要转换的字符串的长度 */
-	printf("inlen=%d\n", *inlen);
+	//printf("inlen=%d\n", *inlen);
 
 
 	/* 由于iconv()函数会修改指针，所以要保存源指针 */
@@ -255,17 +258,17 @@ bool gb2312_to_utf8(char* inbuf, size_t* inlen, char* outbuf, size_t* outlen)
 	}
 
 	/* 存放转换后的字符串 */
-	printf("outbuf=%s\n", outbuf);
+	//printf("outbuf=%s\n", outbuf);
 
 	//存放转换后outbuf剩余的空间
-	printf("outlen=%d\n", *outlen);
+	//printf("outlen=%d\n", *outlen);
 
 	int i = 0;
 
-	for (i = 0; i < (outsize - (*outlen)); i++)
+	//for (i = 0; i < (outsize - (*outlen)); i++)
 	{
 		//printf("%2c", outbuf[i]);
-		printf("%x\n", outbuf[i]);
+		//printf("%x\n", outbuf[i]);
 	}
 
 	/* 关闭句柄 */
@@ -273,6 +276,7 @@ bool gb2312_to_utf8(char* inbuf, size_t* inlen, char* outbuf, size_t* outlen)
 
 	return 0;
 }
+__inline static
 bool utf8_to_gb2312(char* inbuf, size_t* inlen, char* outbuf, size_t* outlen)
 {
 	/* 目的编码, TRANSLIT：遇到无法转换的字符就找相近字符替换
@@ -293,10 +297,10 @@ bool utf8_to_gb2312(char* inbuf, size_t* inlen, char* outbuf, size_t* outlen)
 	}
 
 	/* 需要转换的字符串 */
-	printf("inbuf=%s\n", inbuf);
+	//printf("inbuf=%s\n", inbuf);
 
 	/* 打印需要转换的字符串的长度 */
-	printf("inlen=%d\n", *inlen);
+	//printf("inlen=%d\n", *inlen);
 
 	/* 由于iconv()函数会修改指针，所以要保存源指针 */
 	char* tmpin = inbuf;
@@ -319,17 +323,17 @@ bool utf8_to_gb2312(char* inbuf, size_t* inlen, char* outbuf, size_t* outlen)
 	}
 
 	/* 存放转换后的字符串 */
-	printf("outbuf=%s\n", outbuf);
+	//printf("outbuf=%s\n", outbuf);
 
 	//存放转换后outbuf剩余的空间
-	printf("outlen=%d\n", *outlen);
+	//printf("outlen=%d\n", *outlen);
 
 	int i = 0;
 
-	for (i = 0; i < (outsize - (*outlen)); i++)
+	//for (i = 0; i < (outsize - (*outlen)); i++)
 	{
 		//printf("%2c", outbuf[i]);
-		printf("%x\n", outbuf[i]);
+		//printf("%x\n", outbuf[i]);
 	}
 
 	/* 关闭句柄 */
@@ -492,11 +496,13 @@ size_t file_writer(const char* data, size_t size, const std::string& filename, c
 
 //////////////////////////////////////////////////////////////////////////////
 
-__inline static bool string_regex_valid(const std::string& data, const std::string& pattern)
+__inline static 
+bool string_regex_valid(const std::string& data, const std::string& pattern)
 {
 	return std::regex_match(data, std::regex(pattern));
 }
-__inline static size_t string_regex_replace_all(std::string& result, std::string& data, const std::string& replace, const std::string& pattern, std::regex_constants::match_flag_type matchflagtype = std::regex_constants::match_default)
+__inline static 
+size_t string_regex_replace_all(std::string& result, std::string& data, const std::string& replace, const std::string& pattern, std::regex_constants::match_flag_type matchflagtype = std::regex_constants::match_default)
 {
 	try
 	{
@@ -508,7 +514,8 @@ __inline static size_t string_regex_replace_all(std::string& result, std::string
 	}
 	return data.length();
 }
-__inline static size_t string_regex_find(std::string& result, std::vector<std::vector<std::string>>& svv, const std::string& data, const std::string& pattern)
+__inline static 
+size_t string_regex_find(std::string& result, std::vector<std::vector<std::string>>& svv, const std::string& data, const std::string& pattern)
 {
 	std::smatch smatch;
 	std::string::const_iterator ite = data.end();
@@ -539,7 +546,8 @@ __inline static size_t string_regex_find(std::string& result, std::vector<std::v
 
 	return svv.size();
 }
-__inline static std::string::size_type string_reader(std::string& result, const std::string& strData,
+__inline static 
+std::string::size_type string_reader(std::string& result, const std::string& strData,
 	const std::string& strStart, const std::string& strFinal, std::string::size_type stPos = 0,
 	bool bTakeStart = false, bool bTakeFinal = false)
 {
@@ -567,7 +575,8 @@ __inline static std::string::size_type string_reader(std::string& result, const 
 
 	return stRetPos;
 }
-__inline static std::string string_reader(const std::string& strData,
+__inline static 
+std::string string_reader(const std::string& strData,
 	const std::string& strStart, const std::string& strFinal,
 	bool bTakeStart = false, bool bTakeFinal = false)
 {
@@ -594,7 +603,8 @@ __inline static std::string string_reader(const std::string& strData,
 
 	return strRet;
 }
-__inline static std::string string_replace_all(std::string& strData, const std::string& strDst, const std::string& strSrc, std::string::size_type stPos = 0)
+__inline static 
+std::string string_replace_all(std::string& strData, const std::string& strDst, const std::string& strSrc, std::string::size_type stPos = 0)
 {
 	while ((stPos = strData.find(strSrc, stPos)) != std::string::npos)
 	{
@@ -604,7 +614,8 @@ __inline static std::string string_replace_all(std::string& strData, const std::
 
 	return strData;
 }
-__inline static size_t string_split_to_vector(std::vector<std::string>& sv, const std::string& strData, const std::string& strSplitter, std::string::size_type stPos = 0)
+__inline static 
+size_t string_split_to_vector(std::vector<std::string>& sv, const std::string& strData, const std::string& strSplitter, std::string::size_type stPos = 0)
 {
 	std::string strTmp = ("");
 	std::string::size_type stIdx = 0;
