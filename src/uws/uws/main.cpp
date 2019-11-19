@@ -11,8 +11,34 @@
 #define OPTPARSE_IMPLEMENTATION
 #include "helpers/optparse.h"
 
-int main(int argc, char** argv) {
+#include "common.h"
+#include "curl_helper.h"
+#include "signal_handler.h"
 
+int main(int argc, char** argv) 
+{
+	{
+		std::string data("");
+		file_reader(data, "/usr/share/nginx/html/foot-wash/storage/app/images/edc/20191119/dce.csv");
+		if (data.length() <= 0)
+		{
+			std::string result("");
+			std::string pattern1 = "合约代码：(.*?),,Date：(.*?),\r\n";
+			std::string pattern2 = "总计,,,,(.*?),,(.*?),,\r\n";
+			std::vector<std::vector<std::string>> svv1;
+			std::string out(data.size() * 3, '\0');
+			size_t in_len = data.size();
+			size_t out_len = out.size();
+			bool flag = gb2312_to_utf8((char *)data.c_str(), &in_len, (char *)out.c_str(), &out_len);
+			printf("flag = %d\n", flag);
+			string_regex_find(result, svv1, out.c_str(), pattern1);
+			if (svv1.size())
+			{
+				printf("%s,%s\n", svv1.begin()->at(0).c_str(), svv1.begin()->at(1).c_str());
+			}
+		}
+		return 0;
+	}
 	int option;
 	struct optparse options;
 	optparse_init(&options, argv);
@@ -77,10 +103,37 @@ int main(int argc, char** argv) {
 	}
 	else {
 		/* HTTP */
-		uWS::App().get("/*", [&asyncFileStreamer](auto* res, auto* req) {
-			serveFile(res, req);
-			asyncFileStreamer.streamFile(res, req->getUrl());
-			}).listen(port, [port, root](auto* token) {
+		uWS::App()
+			.get("/hello", [](auto* res, auto* req) {
+			/* You can efficiently stream huge files too */
+			res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("Hello HTTP!");
+				})
+			.get("/chart", [](auto* res, auto* req) {
+					std::string data("");
+					file_reader(data, "/usr/share/nginx/html/foot-wash/storage/app/images/edc/20191119/dce.csv");
+					if (data.length() <= 0)
+					{
+						std::string result("");
+						std::string pattern1 = "合约代码：(.*?),,Date：(.*?),\r\n";
+						std::string pattern2 = "总计,,,,(.*?),,(.*?),,\r\n";
+						std::vector<std::vector<std::string>> svv1;
+						string_regex_find(result, svv1, data, pattern1);
+						if (svv1.size())
+						{
+							printf("%s,%s\n", svv1.begin()->at(0).c_str(), svv1.begin()->at(1).c_str());
+						}
+						res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("no data!");
+					}
+					else
+					{
+						res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("Hello HTTP!");
+					}
+				})
+			.get("/*", [&asyncFileStreamer](auto* res, auto* req) {
+				serveFile(res, req);
+				asyncFileStreamer.streamFile(res, req->getUrl());
+			})
+			.listen(port, [port, root](auto* token) {
 				if (token) {
 					std::cout << "Serving " << root << " over HTTP a " << port << std::endl;
 				}

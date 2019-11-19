@@ -114,14 +114,21 @@
     <ClInclude Include="..\uWebSockets\uSockets\src\internal\loop_data.h" />
     <ClInclude Include="..\uWebSockets\uSockets\src\internal\networking\bsd.h" />
     <ClInclude Include="..\uWebSockets\uSockets\src\libusockets.h" />
+    <ClInclude Include="common.h" />
+    <ClInclude Include="curl_helper.h" />
     <ClInclude Include="helpers\AsyncFileReader.h" />
     <ClInclude Include="helpers\AsyncFileStreamer.h" />
     <ClInclude Include="helpers\Middleware.h" />
     <ClInclude Include="helpers\optparse.h" />
+    <ClInclude Include="signal_handler.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\uWebSockets\Makefile" />
     <None Include="..\uWebSockets\uSockets\Makefile" />
+    <None Include="cffex.csv" />
+    <None Include="czce.csv" />
+    <None Include="dce.csv" />
+    <None Include="shfe.csv" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="favicon.ico" />
