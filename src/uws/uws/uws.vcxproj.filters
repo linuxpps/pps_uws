@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\uWebSockets\uSockets\src\context.c">
+      <Filter>uWebSockets\uSockets\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\uWebSockets\uSockets\src\loop.c">
+      <Filter>uWebSockets\uSockets\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\uWebSockets\uSockets\src\socket.c">
+      <Filter>uWebSockets\uSockets\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\uWebSockets\uSockets\src\ssl.c">
+      <Filter>uWebSockets\uSockets\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\uWebSockets\uSockets\src\eventing\epoll_kqueue.c">
+      <Filter>uWebSockets\uSockets\src\eventing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\uWebSockets\uSockets\src\eventing\gcd.c">
+      <Filter>uWebSockets\uSockets\src\eventing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\uWebSockets\uSockets\src\eventing\libuv.c">
+      <Filter>uWebSockets\uSockets\src\eventing</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="uWebSockets">
+      <UniqueIdentifier>{3987c6ab-daed-42f7-938d-2171355f165c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="uWebSockets\src">
+      <UniqueIdentifier>{edaa943f-a3e0-49d4-8c7d-1aee5dcd5b51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="uWebSockets\src\f2">
+      <UniqueIdentifier>{75401f24-9f66-4ef4-843b-8974935df46f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="helpers">
+      <UniqueIdentifier>{0d31bfc2-5eda-47fa-8952-828cfa8e9932}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="uWebSockets\uSockets">
+      <UniqueIdentifier>{69e2ec43-e6d6-46ba-97b2-42d3f1bfe0ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="uWebSockets\uSockets\src">
+      <UniqueIdentifier>{c8e80975-7722-4261-a805-502429be7f77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="uWebSockets\uSockets\src\eventing">
+      <UniqueIdentifier>{3077983d-2be0-4518-afc5-fb8d13dde6a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="uWebSockets\uSockets\src\internal">
+      <UniqueIdentifier>{3c12b67e-ee07-4807-87e0-ebd159bba06e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="uWebSockets\uSockets\src\internal\eventing">
+      <UniqueIdentifier>{c0a06d7a-2850-412e-95b7-00889f41b3b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="uWebSockets\uSockets\src\internal\networking">
+      <UniqueIdentifier>{32be9f8c-a1f7-4c5d-91b2-b6538bb2c74e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\uWebSockets\src\App.h">
+      <Filter>uWebSockets\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\src\AsyncSocket.h">
+      <Filter>uWebSockets\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\src\AsyncSocketData.h">
+      <Filter>uWebSockets\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\src\HttpContext.h">
+      <Filter>uWebSockets\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\src\HttpContextData.h">
+      <Filter>uWebSockets\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\src\HttpParser.h">
+      <Filter>uWebSockets\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\src\HttpResponse.h">
+      <Filter>uWebSockets\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\src\HttpResponseData.h">
+      <Filter>uWebSockets\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\src\HttpRouter.h">
+      <Filter>uWebSockets\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\src\Loop.h">
+      <Filter>uWebSockets\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\src\LoopData.h">
+      <Filter>uWebSockets\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\src\PerMessageDeflate.h">
+      <Filter>uWebSockets\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\src\TopicTreeDraft.h">
+      <Filter>uWebSockets\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\src\Utilities.h">
+      <Filter>uWebSockets\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\src\WebSocket.h">
+      <Filter>uWebSockets\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\src\WebSocketContext.h">
+      <Filter>uWebSockets\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\src\WebSocketContextData.h">
+      <Filter>uWebSockets\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\src\WebSocketData.h">
+      <Filter>uWebSockets\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\src\WebSocketExtensions.h">
+      <Filter>uWebSockets\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\src\WebSocketHandshake.h">
+      <Filter>uWebSockets\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\src\WebSocketProtocol.h">
+      <Filter>uWebSockets\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\src\f2\function2.hpp">
+      <Filter>uWebSockets\src\f2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\uSockets\src\libusockets.h">
+      <Filter>uWebSockets\uSockets\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\uSockets\src\internal\internal.h">
+      <Filter>uWebSockets\uSockets\src\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\uSockets\src\internal\loop_data.h">
+      <Filter>uWebSockets\uSockets\src\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\uSockets\src\internal\eventing\epoll_kqueue.h">
+      <Filter>uWebSockets\uSockets\src\internal\eventing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\uSockets\src\internal\eventing\gcd.h">
+      <Filter>uWebSockets\uSockets\src\internal\eventing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\uSockets\src\internal\eventing\libuv.h">
+      <Filter>uWebSockets\uSockets\src\internal\eventing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uWebSockets\uSockets\src\internal\networking\bsd.h">
+      <Filter>uWebSockets\uSockets\src\internal\networking</Filter>
+    </ClInclude>
+    <ClInclude Include="helpers\AsyncFileReader.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="helpers\AsyncFileStreamer.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="helpers\Middleware.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="helpers\optparse.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\uWebSockets\Makefile">
+      <Filter>uWebSockets</Filter>
+    </None>
+    <None Include="..\uWebSockets\uSockets\Makefile">
+      <Filter>uWebSockets\uSockets</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="favicon.ico" />
+  </ItemGroup>
+</Project>
