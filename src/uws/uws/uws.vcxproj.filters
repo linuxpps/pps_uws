@@ -167,5 +167,9 @@
     <None Include="..\uWebSockets\uSockets\Makefile">
       <Filter>uWebSockets\uSockets</Filter>
     </None>
+    <None Include="chart.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="favicon.ico" />
   </ItemGroup>
 </Project>

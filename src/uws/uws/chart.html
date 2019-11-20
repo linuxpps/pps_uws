@@ -1,91 +1,115 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>D3绘制折线</title>
     <script src="d3/d3.min.js"></script>
     <script>
         //绘制折线图
-        function polyLine(data, x_value) {
-            let svgAttr = { width: 800, height: 500 }
-            let gAttr = { left: 30, top: 30, right: 30, bottom: 30 }
-            let svg = d3.select('#container-polyLine').append('svg').attr('width', svgAttr.width).attr('height', svgAttr.height);
-            let g = svg.append('g').attr('transform', 'translate(' + gAttr.left + ',' + gAttr.top + ')');
+        function poly_line(xdata, ydata, width, height) {
+        let SVG_SIZE = { width: width, height: height }
+        let SVG_MARGIN = { left: 60, top: 60, right: 60, bottom: 60 }
+        let svg_g = d3.select('#container-line').append('svg').attr('width', SVG_SIZE.width).attr('height', SVG_SIZE.height).append('g');;
 
-            let xScale = d3.scaleBand().domain(x_value).rangeRound([0, svgAttr.width - gAttr.left - gAttr.right]);
-            let xAxis = d3.axisBottom(xScale);
-            let yScale = d3.scaleLinear().domain([0, d3.max(data)]).range([svgAttr.height - gAttr.top - gAttr.bottom, 0]);
-            let yAxis = d3.axisLeft(yScale);
+        let xScale = d3.scaleBand()
+        .domain(xdata)
+        .rangeRound([SVG_MARGIN.left, SVG_SIZE.width - SVG_MARGIN.right]);
+        let xAxis = d3.axisBottom(xScale);
+        let yScale = d3.scaleLinear()
+        .domain([d3.min(ydata, function (d){return parseFloat(d);}), d3.max(ydata, function (d){return parseFloat(d);})])
+        .rangeRound([SVG_SIZE.height - SVG_MARGIN.top, SVG_MARGIN.bottom]);
+        let yAxis = d3.axisLeft(yScale);
 
-            g.append('g').attr('transform', 'translate(0,' + (svgAttr.height - gAttr.top - gAttr.bottom) + ')').call(xAxis);
-            g.append('g').attr('transform', 'translate(0,0)').call(yAxis);
+        svg_g.append('g').attr('transform', 'translate(0,' + (SVG_SIZE.height - SVG_MARGIN.bottom) + ')').call(xAxis);
+        svg_g.append('g').attr('transform', 'translate(' + SVG_MARGIN.left + ',0)').call(yAxis);
 
-            dot = svg.append("g")
-                .attr("display", "none");
+        let line_generator = d3.line()
+        .x(function (d,i) {
+        console.log('x->'+xdata[i]);
+        return xScale(xdata[i]);
+        })
+        .y(function (d,i) {
+        console.log('y->'+d);
+        return yScale(d);
+        })
+        //折线变得圆滑，如果不需要可以去掉
+        .curve(d3.curveMonotoneX);
 
-            dot.append("circle")
-                .attr("r", 2.5);
+        svg_g.append('path')
+        .attr('d', line_generator(ydata))
+        .attr('fill', 'none')
+        .attr('stroke', 'blueviolet')
+        .attr('stroke-width', '2')
+        .attr("stroke-linejoin", "round")
+        .attr("stroke-linecap", "round")
+        .attr('cursor', 'pointer')
+        .on('touchmove', function (d, i) {
+        d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
+        })
+        .on('touchstart', function (d, i) {
+        d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
+        })
+        .on('touchend', function (d, i) {
+        d3.select(this).transition().duration(100).attr('stroke', 'blueviolet');
+        })
+        .on('mousemove', function (d, i) {
+        d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
+        })
+        .on('mouseover', function (d, i) {
+        d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
+        })
+        .on('mouseout', function (d, i) {
+        d3.select(this).transition().duration(100).attr('stroke', 'blueviolet');
+        })
+        .on('click', function () {
+        alert('曲线事件已触发！');
+        });
 
-            dot.append("text")
-                .style("font", "10px sans-serif")
-                .attr("text-anchor", "middle")
-                .attr("y", -8);
-                
-            let line_generator = d3.line()
-            .x(function (d, i) {
-                return xScale(x_value[i]);
-            })
-            .y(function (d, i) {
-                return yScale(d);
-            })
-            //折线变得圆滑，如果不需要可以去掉
-            .curve(d3.curveMonotoneX);
-
-            g.append('path')
-                .attr('d', line_generator(data))
-                .attr('fill', 'none')
-                .attr('stroke', 'blueviolet')
-                .attr("stroke-linejoin", "round")
-                .attr("stroke-linecap", "round")
-                .attr('stroke-width', '4')
-                .attr('cursor', 'pointer')
-                .on('touchmove', function (d, i) {
-                    d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
-                })
-                .on('touchstart', function (d, i) {
-                    d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
-                })
-                .on('touchend', function (d, i) {
-                    d3.select(this).transition().duration(100).attr('stroke', 'blueviolet');
-                })
-                .on('mousemove', function (d, i) {
-                    d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
-                })
-                .on('mouseover', function (d, i) {
-                    d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
-                })
-                .on('mouseout', function (d, i) {
-                    d3.select(this).transition().duration(100).attr('stroke', 'blueviolet');
-                })
-                .on('click', function () {
-                    alert('曲线事件已触发！');
-                });
+        /*g.append('path')
+        .attr('d', line_generator(ydata))
+        .attr('fill', 'none')
+        .attr('stroke', 'blueviolet')
+        .attr("stroke-linejoin", "round")
+        .attr("stroke-linecap", "round")
+        .attr('stroke-width', '2')
+        .attr('cursor', 'pointer')
+        .on('touchmove', function (d, i) {
+        d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
+        })
+        .on('touchstart', function (d, i) {
+        d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
+        })
+        .on('touchend', function (d, i) {
+        d3.select(this).transition().duration(100).attr('stroke', 'blueviolet');
+        })
+        .on('mousemove', function (d, i) {
+        d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
+        })
+        .on('mouseover', function (d, i) {
+        d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
+        })
+        .on('mouseout', function (d, i) {
+        d3.select(this).transition().duration(100).attr('stroke', 'blueviolet');
+        })
+        .on('click', function () {
+        alert('曲线事件已触发！');
+        });*/
         }
 
         window.onload = function () {
-            //let sales_volume_orange = [20, 35, 18, 16, 13, 12, 9, 11, 19, 27, 30, 26];
-            //let monthes = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
-            let sales_volume_orange = AAAAAA;
-            let monthes = BBBBBB;
-            polyLine(sales_volume_orange, monthes);
+        let xdata = AAAAAA;
+        let ydata = BBBBBB;
+        //xdata = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
+        //ydata = [20, 35, 18, 16, 13, 12, 9, 11, 19, 27, 30, 26];
+        poly_line(xdata,ydata, 800, 500);
         }
     </script>
 </head>
 
 <body>
-    <div id="container-polyLine" width="100%" height="100%"></div>
+    <div id="container-line" width="800" height="500"></div>
 </body>
