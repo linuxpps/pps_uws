@@ -140,7 +140,8 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>cp $(ProjectDir)chart.html $(SolutionDir)bin/$(Platform)/$(Configuration)/ -f</Command>
+      <Command>
+      </Command>
     </RemotePostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
@@ -153,7 +154,8 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>cp $(ProjectDir)chart.html $(SolutionDir)bin/$(Platform)/$(Configuration)/ -f</Command>
+      <Command>
+      </Command>
     </RemotePostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
@@ -166,7 +168,8 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>cp $(ProjectDir)chart.html $(SolutionDir)bin/$(Platform)/$(Configuration)/ -f</Command>
+      <Command>
+      </Command>
     </RemotePostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
@@ -179,7 +182,8 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>cp $(ProjectDir)chart.html $(SolutionDir)bin/$(Platform)/$(Configuration)/ -f</Command>
+      <Command>
+      </Command>
     </RemotePostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -192,7 +196,8 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>cp $(ProjectDir)chart.html $(SolutionDir)bin/$(Platform)/$(Configuration)/ -f</Command>
+      <Command>
+      </Command>
     </RemotePostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -205,7 +210,8 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>cp $(ProjectDir)chart.html $(SolutionDir)bin/$(Platform)/$(Configuration)/ -f</Command>
+      <Command>
+      </Command>
     </RemotePostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
@@ -218,7 +224,8 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>cp $(ProjectDir)chart.html $(SolutionDir)bin/$(Platform)/$(Configuration)/ -f</Command>
+      <Command>
+      </Command>
     </RemotePostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
@@ -231,7 +238,8 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>cp $(ProjectDir)chart.html $(SolutionDir)bin/$(Platform)/$(Configuration)/ -f</Command>
+      <Command>
+      </Command>
     </RemotePostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

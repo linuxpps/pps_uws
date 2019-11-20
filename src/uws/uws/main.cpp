@@ -15,7 +15,7 @@
 #include "curl_helper.h"
 #include "signal_handler.h"
 
-#include <unordered_map>
+#include <map>
 
 bool is_trade_day(const time_t& tt)
 {
@@ -45,7 +45,7 @@ std::string time_t_to_date(const time_t& tt)
 	snprintf(date.data(), date.size(), "%04d%02d%02d\0", ptm->tm_year + 1900, ptm->tm_mon + 1, ptm->tm_mday);
 	return date.c_str();
 }
-void calc_date_list(std::unordered_map<std::string, std::string>& umap, const std::string & date, int count)
+void calc_date_list(std::map<std::string, std::string>& umap, const std::string & date, int count)
 {
 	struct tm tm = { 0 };
 	tm.tm_year = std::stoi(date.substr(0, 4)) - 1900;
@@ -58,7 +58,7 @@ void calc_date_list(std::unordered_map<std::string, std::string>& umap, const st
 		{
 			date_tt = get_last_trade_day(date_tt);
 		}
-		umap.insert(std::unordered_map<std::string, std::string>::value_type(time_t_to_date(date_tt),""));
+		umap.insert(std::map<std::string, std::string>::value_type(time_t_to_date(date_tt),""));
 		date_tt = get_last_trade_day(date_tt);
 	}
 	
@@ -68,7 +68,7 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 	std::string X = "";
 	std::string Y = "";
 	std::string T = "";
-	std::unordered_map<std::string, std::string> umap;
+	std::map<std::string, std::string> umap;
 	setlocale(LC_ALL, "chs");
 	calc_date_list(umap, date, count);
 	X.append("[");
@@ -144,7 +144,7 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 	file_reader(temp, "chart.html");
 	string_replace_all(temp, X, "AAAAAA");
 	string_replace_all(temp, Y, "BBBBBB");
-	file_writer(temp, T + ".html");
+	//file_writer(temp, T + ".html");
 	return temp;
 }
 int main(int argc, char** argv) 

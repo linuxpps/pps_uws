@@ -24,17 +24,26 @@
         .rangeRound([SVG_SIZE.height - SVG_MARGIN.top, SVG_MARGIN.bottom]);
         let yAxis = d3.axisLeft(yScale);
 
-        svg_g.append('g').attr('transform', 'translate(0,' + (SVG_SIZE.height - SVG_MARGIN.bottom) + ')').call(xAxis);
-        svg_g.append('g').attr('transform', 'translate(' + SVG_MARGIN.left + ',0)').call(yAxis);
+        svg_g
+            .append('g')
+            .attr('transform', 'translate(0,' + (SVG_SIZE.height - SVG_MARGIN.bottom) + ')')
+            .call(xAxis);
+        svg_g.append('g')
+            .attr('transform', 'translate(' + SVG_MARGIN.left + ',0)')
+            .call(yAxis);
+        svg_g.append('text')
+            .text('手数/天')
 
         let line_generator = d3.line()
         .x(function (d,i) {
-        console.log('x->'+xdata[i]);
-        return xScale(xdata[i]);
+            console.log('x->' + xdata[i]);
+            var a = xdata[i].substr(0, 4);
+            var b = xdata[i].substr(4, 4);
+            return xScale(xdata[i]);
         })
         .y(function (d,i) {
-        console.log('y->'+d);
-        return yScale(d);
+            console.log('y->'+d);
+            return yScale(d);
         })
         //折线变得圆滑，如果不需要可以去掉
         .curve(d3.curveMonotoneX);
@@ -105,11 +114,11 @@
         let ydata = BBBBBB;
         //xdata = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
         //ydata = [20, 35, 18, 16, 13, 12, 9, 11, 19, 27, 30, 26];
-        poly_line(xdata,ydata, 800, 500);
+        poly_line(xdata,ydata, 1000, 800);
         }
     </script>
 </head>
 
 <body>
-    <div id="container-line" width="800" height="500"></div>
+    <div id="container-line" width="1000" height="800"></div>
 </body>
