@@ -11,160 +11,338 @@
     <script>
         //绘制折线图
         function poly_line(data, width, height) {
-        let SVG_SIZE = { width: width, height: height }
-        let SVG_MARGIN = { left: 60, top: 60, right: 60, bottom: 60 }
-        let svg_g = d3.select('#container-line').append('svg').attr('width', SVG_SIZE.width).attr('height', SVG_SIZE.height).append('g');
-        //let xranges = d3.range(data.haxis.length);
-        //var parseTime = d3.timeParse("%Y%m%d");
-        //var formatTime = d3.timeParse("%Y%m%d");
-        let xScale = d3.scaleBand()
-        //.domain([parseTime(data.haxis[0]),parseTime(data.haxis[data.haxis.length - 1])])
-        /*.domain(d3.extent(data.haxis, function(d) {
-        let date = d.substr(0,4) + '-' + d.substr(4,2) + '-' + d.substr(6,2) + ' 00:00:00'
-        console.log(Date.parse(new Date(date)).toString());
-        return Date.parse(new Date(date))/1000; return parseInt(d);}))*/
-        //.domain(d3.extent(data.haxis, function(d) {return d;}))
-        .domain(data.haxis)
-        .rangeRound([SVG_MARGIN.left, SVG_SIZE.width - SVG_MARGIN.right]);
-        let xAxis = d3.axisBottom(xScale);
-        let yScale = d3.scaleLinear()
-        .domain([
-        d3.min([d3.min(data.long, function (d) { return parseFloat(d); }), d3.min(data.short, function (d) { return parseFloat(d); })])
-        ,
-        d3.max([d3.max(data.long, function (d) { return parseFloat(d); }), d3.max(data.short, function (d) { return parseFloat(d); })])
-        ])
-        .rangeRound([SVG_SIZE.height - SVG_MARGIN.top, SVG_MARGIN.bottom]);
-        let yAxis = d3.axisLeft(yScale);
+            let SVG_SIZE = { width: width, height: height }
+            let SVG_MARGIN = { left: 60, top: 60, right: 60, bottom: 60 }
+            let svg_g = d3.select('#container-line').append('svg').attr('width', SVG_SIZE.width).attr('height', SVG_SIZE.height).append('g');
+            //let xranges = d3.range(data.haxis.length);
+            //var parseTime = d3.timeParse("%Y%m%d");
+            //var formatTime = d3.timeParse("%Y%m%d");
+            let xScale = d3.scaleBand()
+                //.domain([parseTime(data.haxis[0]),parseTime(data.haxis[data.haxis.length - 1])])
+                /*.domain(d3.extent(data.haxis, function(d) {
+                let date = d.substr(0,4) + '-' + d.substr(4,2) + '-' + d.substr(6,2) + ' 00:00:00'
+                console.log(Date.parse(new Date(date)).toString());
+                return Date.parse(new Date(date))/1000; return parseInt(d);}))*/
+                //.domain(d3.extent(data.haxis, function(d) {return d;}))
+                .domain(data.haxis)
+                .rangeRound([SVG_MARGIN.left, SVG_SIZE.width - SVG_MARGIN.right]);
+            let xAxis = d3.axisBottom(xScale);
+            let yScale = d3.scaleLinear()
+                .domain([
+                    d3.min([d3.min(data.long5, function (d) { return parseFloat(d); }), d3.min(data.short5, function (d) { return parseFloat(d); })])
+                    ,
+                    d3.max([d3.max(data.long20, function (d) { return parseFloat(d); }), d3.max(data.short20, function (d) { return parseFloat(d); })])
+                ])
+                .rangeRound([SVG_SIZE.height - SVG_MARGIN.top, SVG_MARGIN.bottom]);
+            let yAxis = d3.axisLeft(yScale);
 
-        svg_g
-        .append('g')
-        .attr('transform', 'translate(0,' + (SVG_SIZE.height - SVG_MARGIN.bottom) + ')')
-        .call(xAxis)
-        .selectAll("text")
-        .attr("transform", "rotate(-72)")
-        .style("text-anchor", "end");
-        svg_g.append('g')
-        .attr('transform', 'translate(' + SVG_MARGIN.left + ',0)')
-        .call(yAxis)
-        .selectAll("text");
+            svg_g
+                .append('g')
+                .attr('transform', 'translate(0,' + (SVG_SIZE.height - SVG_MARGIN.bottom) + ')')
+                .call(xAxis)
+                .selectAll("text")
+                .attr("transform", "rotate(-72)")
+                .style("text-anchor", "end");
+            svg_g.append('g')
+                .attr('transform', 'translate(' + SVG_MARGIN.left + ',0)')
+                .call(yAxis)
+                .selectAll("text");
 
-        svg_g.append('text')
-        .attr('transform', 'translate(' + SVG_MARGIN.left + ',' + SVG_MARGIN.bottom + ')')
-        .attr("x", 3)
-        .attr("text-anchor", "start")
-        .attr("font-weight", "bold")
-        .text('手数/天（蓝线--持多仓 紫线--持空仓）');
+            svg_g.append('text')
+                .attr('transform', 'translate(' + SVG_MARGIN.left + ',' + SVG_MARGIN.bottom + ')')
+                .attr("x", 3)
+                .attr("text-anchor", "start")
+                .attr("font-weight", "bold")
+                .text('手数/天（蓝线--持多仓 紫线--持空仓）');
 
-        let line_generator = d3.line()
-        .x(function (d, i) {
-        console.log('x->' + data.haxis[i] + ',type=' + typeof (data.haxis[i]));
-        return xScale(data.haxis[i]);
-        })
-        .y(function (d, i) {
-        console.log('y->' + d);
-        return yScale(d);
-        })
-        //折线变得圆滑，如果不需要可以去掉
-        .curve(d3.curveMonotoneX);
-        const dot = svg_g.append("g")
-        .attr("display", "none");
-        dot.append("circle")
-        .attr("r", 2.5);
-        dot.append("text")
-        .style("font", "10px sans-serif")
-        .attr("text-anchor", "middle")
-        .attr("y", -8);
+            let line_generator = d3.line()
+                .x(function (d, i) {
+                    console.log('x->' + data.haxis[i] + ',type=' + typeof (data.haxis[i]));
+                    return xScale(data.haxis[i]);
+                })
+                .y(function (d, i) {
+                    console.log('y->' + d);
+                    return yScale(d);
+                })
+                //折线变得圆滑，如果不需要可以去掉
+                ;//.curve(d3.curveMonotoneX);
+            const dot = svg_g.append("g")
+                .attr("display", "none");
+            dot.append("circle")
+                .attr("r", 2.5);
+            dot.append("text")
+                .style("font", "10px sans-serif")
+                .attr("text-anchor", "middle")
+                .attr("y", -8);
 
-        svg_g.append('path')
-        .attr('d', line_generator(data.long))
-        .attr('fill', 'none')
-        .attr('stroke', '#009FFD')
-        .attr('stroke-width', '2')
-        .attr("stroke-linejoin", "round")
-        .attr("stroke-linecap", "round")
-        .attr('cursor', 'pointer')
-        .on('touchmove', function (d, i) {
-        d3.select(this).transition().duration(100).attr('stroke', '#0C7730');
-        })
-        .on('touchstart', function (d, i) {
-        d3.select(this).transition().duration(100).attr('stroke', '#0C7730');
-        })
-        .on('touchend', function (d, i) {
-        d3.select(this).transition().duration(100).attr('stroke', '#009FFD');
-        })
-        .on('mousemove', function (d, i) {
-        d3.select(this).transition().duration(100).attr('stroke', '#0C7730');
-        d3.event.preventDefault();
-        dot.attr("display", null);
-        console.log(d3.event.layerX + '--' + d3.event.layerY);
-        if(d3.event.layerX <= SVG_SIZE.width && d3.event.layerX >= 0)
-        {
-        let offset = (d3.event.layerX - SVG_MARGIN.left) / ((SVG_SIZE.width - SVG_MARGIN.right - SVG_MARGIN.left)/ data.haxis.length );
-        let index = parseInt(offset.toString());
-        console.log(offset + ']------' + index + ']------' + data.haxis[index] + ',' + data.long[index] + ',' + data.short[index]);
-        dot.attr('transform', 'translate('+ d3.event.layerX +',' + d3.event.layerY + ')');
-        dot.select("text").text('日期:' + data.haxis[index] + ',多单:' + data.long[index]);
-        }
-        })
-        .on('mouseover', function (d, i) {
-        d3.select(this).transition().duration(100).attr('stroke', '#0C7730');
-        })
-        .on('mouseout', function (d, i) {
-        d3.select(this).transition().duration(100).attr('stroke', '#009FFD');
-        dot.attr("display", "none");
-        })
-        .on('click', function () {
-        alert('曲线事件已触发！');
-        });
+            /////////////////////////////////////////////////////////////////////////////////////////////
+            //5多单
+            svg_g.append('path')
+                .attr('d', line_generator(data.long5))
+                .attr('fill', 'none')
+                .attr('stroke', '#FF0080')
+                .attr('stroke-width', '2')
+                .attr("stroke-linejoin", "round")
+                .attr("stroke-linecap", "round")
+                .attr('cursor', 'pointer')
+                .on('touchmove', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#0C7730');
+                })
+                .on('touchstart', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#0C7730');
+                })
+                .on('touchend', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#FF0080');
+                })
+                .on('mousemove', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#0C7730');
+                    d3.event.preventDefault();
+                    dot.attr("display", null);
+                    console.log(d3.event.layerX + '--' + d3.event.layerY);
+                    if (d3.event.layerX <= SVG_SIZE.width && d3.event.layerX >= 0) {
+                        let offset = (d3.event.layerX - SVG_MARGIN.left) / ((SVG_SIZE.width - SVG_MARGIN.right - SVG_MARGIN.left) / data.haxis.length);
+                        let index = parseInt(offset.toString());
+                        console.log(offset + ']------' + index + ']------' + data.haxis[index] + ',' + data.long5[index] + ',' + data.short5[index]);
+                        dot.attr('transform', 'translate(' + d3.event.layerX + ',' + d3.event.layerY + ')');
+                        dot.select("text").text('日期:' + data.haxis[index] + ',5多单:' + data.long5[index]);
+                    }
+                })
+                .on('mouseover', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#0C7730');
+                })
+                .on('mouseout', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#FF0080');
+                    dot.attr("display", "none");
+                })
+                .on('click', function () {
+                    alert('曲线事件已触发！');
+                });
 
-        svg_g.append('path')
-        .attr('d', line_generator(data.short))
-        .attr('fill', 'none')
-        .attr('stroke', 'blueviolet')
-        .attr("stroke-linejoin", "round")
-        .attr("stroke-linecap", "round")
-        .attr('stroke-width', '2')
-        .attr('cursor', 'pointer')
-        .on('touchmove', function (d, i) {
-        d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
-        })
-        .on('touchstart', function (d, i) {
-        d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
-        })
-        .on('touchend', function (d, i) {
-        d3.select(this).transition().duration(100).attr('stroke', 'blueviolet');
-        })
-        .on('mousemove', function (d, i) {
-        d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
-        d3.event.preventDefault();
-        dot.attr("display", null);
-        console.log(d3.event.layerX + '--' + d3.event.layerY);
-        if(d3.event.layerX <= SVG_SIZE.width && d3.event.layerX >= 0)
-        {
-        let offset = (d3.event.layerX - SVG_MARGIN.left) / ((SVG_SIZE.width - SVG_MARGIN.right - SVG_MARGIN.left)/ data.haxis.length );
-        let index = parseInt(offset.toString());
-        console.log(offset + ']------' + index + ']------' + data.haxis[index] + ',' + data.long[index] + ',' + data.short[index]);
-        dot.attr('transform', 'translate('+ d3.event.layerX +',' + d3.event.layerY + ')');
-        dot.select("text").text('日期:' + data.haxis[index] + ',空单:' + data.long[index]);
-        }
-        })
-        .on('mouseover', function (d, i) {
-        d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
-        })
-        .on('mouseout', function (d, i) {
-        d3.select(this).transition().duration(100).attr('stroke', 'blueviolet');
-        dot.attr("display", "none");
-        })
-        .on('click', function () {
-        alert('曲线事件已触发！');
-        });
+            //5空单
+            svg_g.append('path')
+                .attr('d', line_generator(data.short5))
+                .attr('fill', 'none')
+                .attr('stroke', '#FF8080')
+                .attr("stroke-linejoin", "round")
+                .attr("stroke-linecap", "round")
+                .attr('stroke-width', '2')
+                .attr('cursor', 'pointer')
+                .on('touchmove', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
+                })
+                .on('touchstart', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
+                })
+                .on('touchend', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#FF8080');
+                })
+                .on('mousemove', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
+                    d3.event.preventDefault();
+                    dot.attr("display", null);
+                    console.log(d3.event.layerX + '--' + d3.event.layerY);
+                    if (d3.event.layerX <= SVG_SIZE.width && d3.event.layerX >= 0) {
+                        let offset = (d3.event.layerX - SVG_MARGIN.left) / ((SVG_SIZE.width - SVG_MARGIN.right - SVG_MARGIN.left) / data.haxis.length);
+                        let index = parseInt(offset.toString());
+                        console.log(offset + ']------' + index + ']------' + data.haxis[index] + ',' + data.long5[index] + ',' + data.short5[index]);
+                        dot.attr('transform', 'translate(' + d3.event.layerX + ',' + d3.event.layerY + ')');
+                        dot.select("text").text('日期:' + data.haxis[index] + ',5空单:' + data.long5[index]);
+                    }
+                })
+                .on('mouseover', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
+                })
+                .on('mouseout', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#FF8080');
+                    dot.attr("display", "none");
+                })
+                .on('click', function () {
+                    alert('曲线事件已触发！');
+                });
+            /////////////////////////////////////////////////////////////////////////////////////////////
+            //10多单
+            svg_g.append('path')
+                .attr('d', line_generator(data.long10))
+                .attr('fill', 'none')
+                .attr('stroke', '#8000FF')
+                .attr('stroke-width', '2')
+                .attr("stroke-linejoin", "round")
+                .attr("stroke-linecap", "round")
+                .attr('cursor', 'pointer')
+                .on('touchmove', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#0C7730');
+                })
+                .on('touchstart', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#0C7730');
+                })
+                .on('touchend', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#8000FF');
+                })
+                .on('mousemove', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#0C7730');
+                    d3.event.preventDefault();
+                    dot.attr("display", null);
+                    console.log(d3.event.layerX + '--' + d3.event.layerY);
+                    if (d3.event.layerX <= SVG_SIZE.width && d3.event.layerX >= 0) {
+                        let offset = (d3.event.layerX - SVG_MARGIN.left) / ((SVG_SIZE.width - SVG_MARGIN.right - SVG_MARGIN.left) / data.haxis.length);
+                        let index = parseInt(offset.toString());
+                        console.log(offset + ']------' + index + ']------' + data.haxis[index] + ',' + data.long10[index] + ',' + data.short10[index]);
+                        dot.attr('transform', 'translate(' + d3.event.layerX + ',' + d3.event.layerY + ')');
+                        dot.select("text").text('日期:' + data.haxis[index] + ',10多单:' + data.long10[index]);
+                    }
+                })
+                .on('mouseover', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#0C7730');
+                })
+                .on('mouseout', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#8000FF');
+                    dot.attr("display", "none");
+                })
+                .on('click', function () {
+                    alert('曲线事件已触发！');
+                });
+
+            //10空单
+            svg_g.append('path')
+                .attr('d', line_generator(data.short10))
+                .attr('fill', 'none')
+                .attr('stroke', '#8080FF')
+                .attr("stroke-linejoin", "round")
+                .attr("stroke-linecap", "round")
+                .attr('stroke-width', '2')
+                .attr('cursor', 'pointer')
+                .on('touchmove', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
+                })
+                .on('touchstart', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
+                })
+                .on('touchend', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#8080FF');
+                })
+                .on('mousemove', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
+                    d3.event.preventDefault();
+                    dot.attr("display", null);
+                    console.log(d3.event.layerX + '--' + d3.event.layerY);
+                    if (d3.event.layerX <= SVG_SIZE.width && d3.event.layerX >= 0) {
+                        let offset = (d3.event.layerX - SVG_MARGIN.left) / ((SVG_SIZE.width - SVG_MARGIN.right - SVG_MARGIN.left) / data.haxis.length);
+                        let index = parseInt(offset.toString());
+                        console.log(offset + ']------' + index + ']------' + data.haxis[index] + ',' + data.long10[index] + ',' + data.short10[index]);
+                        dot.attr('transform', 'translate(' + d3.event.layerX + ',' + d3.event.layerY + ')');
+                        dot.select("text").text('日期:' + data.haxis[index] + ',10空单:' + data.long10[index]);
+                    }
+                })
+                .on('mouseover', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
+                })
+                .on('mouseout', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#8080FF');
+                    dot.attr("display", "none");
+                })
+                .on('click', function () {
+                    alert('曲线事件已触发！');
+                });
+
+            /////////////////////////////////////////////////////////////////////////////////////////////
+            //20多单
+            svg_g.append('path')
+                .attr('d', line_generator(data.long20))
+                .attr('fill', 'none')
+                .attr('stroke', '#FF8000')
+                .attr('stroke-width', '2')
+                .attr("stroke-linejoin", "round")
+                .attr("stroke-linecap", "round")
+                .attr('cursor', 'pointer')
+                .on('touchmove', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#0C7730');
+                })
+                .on('touchstart', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#0C7730');
+                })
+                .on('touchend', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#FF8000');
+                })
+                .on('mousemove', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#0C7730');
+                    d3.event.preventDefault();
+                    dot.attr("display", null);
+                    console.log(d3.event.layerX + '--' + d3.event.layerY);
+                    if (d3.event.layerX <= SVG_SIZE.width && d3.event.layerX >= 0) {
+                        let offset = (d3.event.layerX - SVG_MARGIN.left) / ((SVG_SIZE.width - SVG_MARGIN.right - SVG_MARGIN.left) / data.haxis.length);
+                        let index = parseInt(offset.toString());
+                        console.log(offset + ']------' + index + ']------' + data.haxis[index] + ',' + data.long20[index] + ',' + data.short20[index]);
+                        dot.attr('transform', 'translate(' + d3.event.layerX + ',' + d3.event.layerY + ')');
+                        dot.select("text").text('日期:' + data.haxis[index] + ',20多单:' + data.long20[index]);
+                    }
+                })
+                .on('mouseover', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#0C7730');
+                })
+                .on('mouseout', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#FF8000');
+                    dot.attr("display", "none");
+                })
+                .on('click', function () {
+                    alert('曲线事件已触发！');
+                });
+
+            //20空单
+            svg_g.append('path')
+                .attr('d', line_generator(data.short20))
+                .attr('fill', 'none')
+                .attr('stroke', '#008000')
+                .attr("stroke-linejoin", "round")
+                .attr("stroke-linecap", "round")
+                .attr('stroke-width', '2')
+                .attr('cursor', 'pointer')
+                .on('touchmove', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
+                })
+                .on('touchstart', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
+                })
+                .on('touchend', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#008000');
+                })
+                .on('mousemove', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
+                    d3.event.preventDefault();
+                    dot.attr("display", null);
+                    console.log(d3.event.layerX + '--' + d3.event.layerY);
+                    if (d3.event.layerX <= SVG_SIZE.width && d3.event.layerX >= 0) {
+                        let offset = (d3.event.layerX - SVG_MARGIN.left) / ((SVG_SIZE.width - SVG_MARGIN.right - SVG_MARGIN.left) / data.haxis.length);
+                        let index = parseInt(offset.toString());
+                        console.log(offset + ']------' + index + ']------' + data.haxis[index] + ',' + data.long20[index] + ',' + data.short20[index]);
+                        dot.attr('transform', 'translate(' + d3.event.layerX + ',' + d3.event.layerY + ')');
+                        dot.select("text").text('日期:' + data.haxis[index] + ',20空单:' + data.long20[index]);
+                    }
+                })
+                .on('mouseover', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
+                })
+                .on('mouseout', function (d, i) {
+                    d3.select(this).transition().duration(100).attr('stroke', '#008000');
+                    dot.attr("display", "none");
+                })
+                .on('click', function () {
+                    alert('曲线事件已触发！');
+                });
         }
 
         window.onload = function () {
-        let data = { "haxis": XXXXXX, "long": LLLLLL, "short": SSSSSS };
-        //xdata = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
-        //ydata = [20, 35, 18, 16, 13, 12, 9, 11, 19, 27, 30, 26];
-        poly_line(data, 1000, 800);
+            let data = {
+                "haxis": XXXXXX,
+                "long5": LLL5LLL,
+                "short5": SSS5SSS,
+                "long10": LLL10LLL,
+                "short10": SSS10SSS,
+                "long20": LLL20LLL,
+                "short20": SSS20SSS
+            };
+            //xdata = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
+            //ydata = [20, 35, 18, 16, 13, 12, 9, 11, 19, 27, 30, 26];
+            poly_line(data, 800, 600);
         }
     </script>
 </head>

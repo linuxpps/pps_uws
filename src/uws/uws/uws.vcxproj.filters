@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="..\uWebSockets\uSockets\src\context.c">
       <Filter>uWebSockets\uSockets\src</Filter>
     </ClCompile>
@@ -22,6 +21,9 @@
     </ClCompile>
     <ClCompile Include="..\uWebSockets\uSockets\src\eventing\libuv.c">
       <Filter>uWebSockets\uSockets\src\eventing</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>uws</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -54,6 +56,9 @@
     </Filter>
     <Filter Include="uWebSockets\uSockets\src\internal\networking">
       <UniqueIdentifier>{32be9f8c-a1f7-4c5d-91b2-b6538bb2c74e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="uws">
+      <UniqueIdentifier>{065d759f-cf38-498d-8e6b-01f064c2eb59}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -156,9 +161,15 @@
     <ClInclude Include="helpers\optparse.h">
       <Filter>helpers</Filter>
     </ClInclude>
-    <ClInclude Include="common.h" />
-    <ClInclude Include="curl_helper.h" />
-    <ClInclude Include="signal_handler.h" />
+    <ClInclude Include="common.h">
+      <Filter>uws</Filter>
+    </ClInclude>
+    <ClInclude Include="curl_helper.h">
+      <Filter>uws</Filter>
+    </ClInclude>
+    <ClInclude Include="signal_handler.h">
+      <Filter>uws</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\uWebSockets\Makefile">
@@ -167,10 +178,17 @@
     <None Include="..\uWebSockets\uSockets\Makefile">
       <Filter>uWebSockets\uSockets</Filter>
     </None>
-    <None Include="chart.html" />
-    <None Include="dce.csv" />
+    <None Include="chart.html">
+      <Filter>uws</Filter>
+    </None>
+    <None Include="dce.csv">
+      <Filter>uws</Filter>
+    </None>
+    <None Include="..\setup_deps.bat" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="favicon.ico" />
+    <Image Include="favicon.ico">
+      <Filter>uws</Filter>
+    </Image>
   </ItemGroup>
 </Project>

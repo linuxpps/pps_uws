@@ -123,6 +123,7 @@
     <ClInclude Include="signal_handler.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\setup_deps.bat" />
     <None Include="..\uWebSockets\Makefile" />
     <None Include="..\uWebSockets\uSockets\Makefile" />
     <None Include="chart.html" />

@@ -67,14 +67,22 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 {
 	std::string T = "";
 	std::string X = "";
-	std::string L = "";
-	std::string S = "";
+	std::string L5 = "";
+	std::string S5 = "";
+	std::string L10 = "";
+	std::string S10 = "";
+	std::string L20 = "";
+	std::string S20 = "";
 	std::map<std::string, std::string> umap;
 	setlocale(LC_ALL, "chs");
 	calc_date_list(umap, date, count);
 	X.append("[");
-	L.append("[");
-	S.append("[");
+	L5.append("[");
+	S5.append("[");
+	L10.append("[");
+	S10.append("[");
+	L20.append("[");
+	S20.append("[");
 	for (auto& it : umap)
 	{
 		std::string data("");
@@ -87,8 +95,10 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 			std::string result("");
 			std::string pattern1 = "合约代码：(.*?),Date：(.*?),\r\n";
 			std::string pattern2 = "总计,(.*?),(.*?),\r\n";
+			std::string pattern3 = "(.*?),(.*?),(.*?),(.*?),\r\n";
 			std::vector<std::vector<std::string>> svv1;
 			std::vector<std::vector<std::string>> svv2;
+			std::vector<std::vector<std::string>> svv3;
 			std::string out(data.size() * 4, '\0');
 			size_t in_len = data.size();
 			size_t out_len = out.size();
@@ -96,36 +106,77 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 			//printf("flag = %d\n", flag);
 			flag = string_regex_find(result, svv1, out.c_str(), pattern1);
 			//printf("flag = %d\n", flag);
-			int nIndex = (-1);
+			int nIndex1 = (-1);
 			if (svv1.size())
 			{
 				for (size_t i = 0; i < svv1.at(0).size(); i++)
 				{
 					if (svv1.at(0).at(i).compare(product_name) == 0)
 					{
-						nIndex = i;
+						nIndex1 = i;
 						break;
 					}
 				}
-				if (nIndex >= 0 && nIndex < svv1.at(0).size())
+				if (nIndex1 >= 0 && nIndex1 < svv1.at(0).size())
 				{
-					T = svv1.at(0).at(nIndex).c_str();
+					T = svv1.at(0).at(nIndex1).c_str();
 					//printf("%s,%s\n", svv1.at(0).at(nIndex).c_str(), svv1.at(1).at(nIndex).c_str());
+					X.append("'").append(it.first).append("',");
+
+					flag = string_regex_find(result, svv3, out.c_str(), pattern3);
+					//printf("flag = %d\n", flag);
+					if (svv3.size())
+					{
+						int nIndexLong = nIndex1 * 63 + 21;
+						int nIndexShort = nIndex1 * 63 + 42;
+						int nSumLong = 0;
+						int nSumShort = 0;
+						//printf("%s,%s\n", svv3.at(0).at(nIndexLong).c_str(), svv3.at(1).at(nIndexLong).c_str());
+						nSumLong += std::stoi(svv3.at(2).at(nIndexLong + 1).c_str());
+						nSumLong += std::stoi(svv3.at(2).at(nIndexLong + 2).c_str());
+						nSumLong += std::stoi(svv3.at(2).at(nIndexLong + 3).c_str());
+						nSumLong += std::stoi(svv3.at(2).at(nIndexLong + 4).c_str());
+						nSumLong += std::stoi(svv3.at(2).at(nIndexLong + 5).c_str());
+						//持买量
+						L5.append("'").append(std::to_string(nSumLong)).append("',");
+						nSumLong += std::stoi(svv3.at(2).at(nIndexLong + 6).c_str());
+						nSumLong += std::stoi(svv3.at(2).at(nIndexLong + 7).c_str());
+						nSumLong += std::stoi(svv3.at(2).at(nIndexLong + 8).c_str());
+						nSumLong += std::stoi(svv3.at(2).at(nIndexLong + 9).c_str());
+						nSumLong += std::stoi(svv3.at(2).at(nIndexLong + 10).c_str());
+						//持买量
+						L10.append("'").append(std::to_string(nSumLong)).append("',");
+
+						nSumShort += std::stoi(svv3.at(2).at(nIndexShort + 1).c_str());
+						nSumShort += std::stoi(svv3.at(2).at(nIndexShort + 2).c_str());
+						nSumShort += std::stoi(svv3.at(2).at(nIndexShort + 3).c_str());
+						nSumShort += std::stoi(svv3.at(2).at(nIndexShort + 4).c_str());
+						nSumShort += std::stoi(svv3.at(2).at(nIndexShort + 5).c_str());
+						//持买量
+						S5.append("'").append(std::to_string(nSumShort)).append("',");
+						nSumShort += std::stoi(svv3.at(2).at(nIndexShort + 6).c_str());
+						nSumShort += std::stoi(svv3.at(2).at(nIndexShort + 7).c_str());
+						nSumShort += std::stoi(svv3.at(2).at(nIndexShort + 8).c_str());
+						nSumShort += std::stoi(svv3.at(2).at(nIndexShort + 9).c_str());
+						nSumShort += std::stoi(svv3.at(2).at(nIndexShort + 10).c_str());
+						//持买量
+						S10.append("'").append(std::to_string(nSumShort)).append("',");
+					}
+
 					flag = string_regex_find(result, svv2, out.c_str(), pattern2);
 					//printf("flag = %d\n", flag);
 					if (svv2.size())
 					{
-						nIndex *= 3;
-						printf("%s,%s\n", svv2.at(0).at(nIndex).c_str(), svv2.at(1).at(nIndex).c_str());
-						X.append("'").append(it.first).append("',");
+						int nIndex2 = nIndex1 * 3;
+						//printf("%s,%s\n", svv2.at(0).at(nIndex2).c_str(), svv2.at(1).at(nIndex2).c_str());
 						//成交量
-						it.second = svv2.at(0).at(nIndex);
+						it.second = svv2.at(0).at(nIndex2);
 						//持买量
-						it.second = svv2.at(0).at(nIndex + 1);
-						L.append("'").append(it.second).append("',");
+						it.second = svv2.at(0).at(nIndex2 + 1);
+						L20.append("'").append(svv2.at(0).at(nIndex2 + 1)).append("',");
 						//持卖量
-						it.second = svv2.at(0).at(nIndex + 2);
-						S.append("'").append(it.second).append("',");
+						it.second = svv2.at(0).at(nIndex2 + 2);
+						S20.append("'").append(svv2.at(0).at(nIndex2 + 2)).append("',");
 					}
 				}
 			}
@@ -140,27 +191,63 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 	{
 		X.append("]");
 	}
-	if (L.length() > 1)
+	if (L5.length() > 1)
 	{
-		*L.rbegin() = ']';
+		*L5.rbegin() = ']';
 	}
 	else
 	{
-		L.append("]");
+		L5.append("]");
 	}
-	if (S.length() > 1)
+	if (S5.length() > 1)
 	{
-		*S.rbegin() = ']';
+		*S5.rbegin() = ']';
 	}
 	else
 	{
-		S.append("]");
+		S5.append("]");
+	}
+	if (L10.length() > 1)
+	{
+		*L10.rbegin() = ']';
+	}
+	else
+	{
+		L10.append("]");
+	}
+	if (S10.length() > 1)
+	{
+		*S10.rbegin() = ']';
+	}
+	else
+	{
+		S10.append("]");
+	}
+	if (L20.length() > 1)
+	{
+		*L20.rbegin() = ']';
+	}
+	else
+	{
+		L20.append("]");
+	}
+	if (S20.length() > 1)
+	{
+		*S20.rbegin() = ']';
+	}
+	else
+	{
+		S20.append("]");
 	}
 	std::string temp;
 	file_reader(temp, "chart.html");
 	string_replace_all(temp, X, "XXXXXX");
-	string_replace_all(temp, L, "LLLLLL");
-	string_replace_all(temp, S, "SSSSSS");
+	string_replace_all(temp, L5, "LLL5LLL");
+	string_replace_all(temp, S5, "SSS5SSS");
+	string_replace_all(temp, L10, "LLL10LLL");
+	string_replace_all(temp, S10, "SSS10SSS");
+	string_replace_all(temp, L20, "LLL20LLL");
+	string_replace_all(temp, S20, "SSS20SSS");
 	//file_writer(temp, T + ".html");
 	return temp;
 }
