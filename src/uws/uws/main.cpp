@@ -65,14 +65,16 @@ void calc_date_list(std::map<std::string, std::string>& umap, const std::string 
 }
 std::string dce_chart(const std::string& product_name, const std::string& date, int count)
 {
-	std::string X = "";
-	std::string Y = "";
 	std::string T = "";
+	std::string X = "";
+	std::string L = "";
+	std::string S = "";
 	std::map<std::string, std::string> umap;
 	setlocale(LC_ALL, "chs");
 	calc_date_list(umap, date, count);
 	X.append("[");
-	Y.append("[");
+	L.append("[");
+	S.append("[");
 	for (auto& it : umap)
 	{
 		std::string data("");
@@ -107,18 +109,24 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 				}
 				if (nIndex >= 0 && nIndex < svv1.at(0).size())
 				{
+					T = svv1.at(0).at(nIndex).c_str();
 					//printf("%s,%s\n", svv1.at(0).at(nIndex).c_str(), svv1.at(1).at(nIndex).c_str());
 					flag = string_regex_find(result, svv2, out.c_str(), pattern2);
 					//printf("flag = %d\n", flag);
 					if (svv2.size())
 					{
+						nIndex *= 3;
 						printf("%s,%s\n", svv2.at(0).at(nIndex).c_str(), svv2.at(1).at(nIndex).c_str());
+						X.append("'").append(it.first).append("',");
+						//成交量
+						it.second = svv2.at(0).at(nIndex);
+						//持买量
+						it.second = svv2.at(0).at(nIndex + 1);
+						L.append("'").append(it.second).append("',");
+						//持卖量
+						it.second = svv2.at(0).at(nIndex + 2);
+						S.append("'").append(it.second).append("',");
 					}
-					it.second = svv2.at(1).at(nIndex);
-					T = svv1.at(0).at(nIndex).c_str();
-
-					X.append("'").append(it.first).append("',");
-					Y.append("'").append(it.second).append("',");
 				}
 			}
 		}
@@ -132,18 +140,27 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 	{
 		X.append("]");
 	}
-	if (Y.length() > 1)
+	if (L.length() > 1)
 	{
-		*Y.rbegin() = ']';
+		*L.rbegin() = ']';
 	}
 	else
 	{
-		Y.append("]");
+		L.append("]");
+	}
+	if (S.length() > 1)
+	{
+		*S.rbegin() = ']';
+	}
+	else
+	{
+		S.append("]");
 	}
 	std::string temp;
 	file_reader(temp, "chart.html");
-	string_replace_all(temp, X, "AAAAAA");
-	string_replace_all(temp, Y, "BBBBBB");
+	string_replace_all(temp, X, "XXXXXX");
+	string_replace_all(temp, L, "LLLLLL");
+	string_replace_all(temp, S, "SSSSSS");
 	//file_writer(temp, T + ".html");
 	return temp;
 }

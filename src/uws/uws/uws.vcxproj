@@ -126,6 +126,7 @@
     <None Include="..\uWebSockets\Makefile" />
     <None Include="..\uWebSockets\uSockets\Makefile" />
     <None Include="chart.html" />
+    <None Include="dce.csv" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="favicon.ico" />
@@ -140,9 +141,12 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
+      <Command>cp ./chart.html ../bin/$(Platform)/$(Configuration)/ -f</Command>
+    </RemotePostBuildEvent>
+    <RemotePreBuildEvent>
       <Command>
       </Command>
-    </RemotePostBuildEvent>
+    </RemotePreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <ClCompile>
@@ -154,9 +158,12 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
+      <Command>cp ./chart.html ../bin/$(Platform)/$(Configuration)/ -f</Command>
+    </RemotePostBuildEvent>
+    <RemotePreBuildEvent>
       <Command>
       </Command>
-    </RemotePostBuildEvent>
+    </RemotePreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
     <ClCompile>
@@ -168,9 +175,12 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
+      <Command>cp ./chart.html ../bin/$(Platform)/$(Configuration)/ -f</Command>
+    </RemotePostBuildEvent>
+    <RemotePreBuildEvent>
       <Command>
       </Command>
-    </RemotePostBuildEvent>
+    </RemotePreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <ClCompile>
@@ -182,9 +192,12 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
+      <Command>cp ./chart.html ../bin/$(Platform)/$(Configuration)/ -f</Command>
+    </RemotePostBuildEvent>
+    <RemotePreBuildEvent>
       <Command>
       </Command>
-    </RemotePostBuildEvent>
+    </RemotePreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -196,9 +209,12 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
+      <Command>cp ./chart.html ../bin/$(Platform)/$(Configuration)/ -f</Command>
+    </RemotePostBuildEvent>
+    <RemotePreBuildEvent>
       <Command>
       </Command>
-    </RemotePostBuildEvent>
+    </RemotePreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -210,9 +226,12 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
+      <Command>cp ./chart.html ../bin/$(Platform)/$(Configuration)/ -f</Command>
+    </RemotePostBuildEvent>
+    <RemotePreBuildEvent>
       <Command>
       </Command>
-    </RemotePostBuildEvent>
+    </RemotePreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <ClCompile>
@@ -224,9 +243,12 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
+      <Command>cp ./chart.html ../bin/$(Platform)/$(Configuration)/ -f</Command>
+    </RemotePostBuildEvent>
+    <RemotePreBuildEvent>
       <Command>
       </Command>
-    </RemotePostBuildEvent>
+    </RemotePreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
     <ClCompile>
@@ -238,9 +260,12 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
+      <Command>cp ./chart.html ../bin/$(Platform)/$(Configuration)/ -f</Command>
+    </RemotePostBuildEvent>
+    <RemotePreBuildEvent>
       <Command>
       </Command>
-    </RemotePostBuildEvent>
+    </RemotePreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
