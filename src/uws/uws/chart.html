@@ -25,7 +25,7 @@
         return Date.parse(new Date(date))/1000; return parseInt(d);}))*/
         //.domain(d3.extent(data.haxis, function(d) {return d;}))
         .domain(data.haxis)
-        .range([SVG_MARGIN.left, SVG_SIZE.width - SVG_MARGIN.right]);
+        .rangeRound([SVG_MARGIN.left, SVG_SIZE.width - SVG_MARGIN.right]);
         let xAxis = d3.axisBottom(xScale);
         let yScale = d3.scaleLinear()
         .domain([
@@ -57,7 +57,7 @@
 
         let line_generator = d3.line()
         .x(function (d, i) {
-        console.log('x->' + data.haxis[i]+',type='+typeof(data.haxis[i]));
+        console.log('x->' + data.haxis[i] + ',type=' + typeof (data.haxis[i]));
         return xScale(data.haxis[i]);
         })
         .y(function (d, i) {
@@ -94,19 +94,24 @@
         })
         .on('mousemove', function (d, i) {
         d3.select(this).transition().duration(100).attr('stroke', '#0C7730');
+        d3.event.preventDefault();
+        dot.attr("display", null);
+        console.log(d3.event.layerX + '--' + d3.event.layerY);
+        if(d3.event.layerX <= SVG_SIZE.width && d3.event.layerX >= 0)
+        {
+        let offset = (d3.event.layerX - SVG_MARGIN.left) / ((SVG_SIZE.width - SVG_MARGIN.right - SVG_MARGIN.left)/ data.haxis.length );
+        let index = parseInt(offset.toString());
+        console.log(offset + ']------' + index + ']------' + data.haxis[index] + ',' + data.long[index] + ',' + data.short[index]);
+        dot.attr('transform', 'translate('+ d3.event.layerX +',' + d3.event.layerY + ')');
+        dot.select("text").text('日期:' + data.haxis[index] + ',多单:' + data.long[index]);
+        }
         })
         .on('mouseover', function (d, i) {
         d3.select(this).transition().duration(100).attr('stroke', '#0C7730');
-        /*d3.event.preventDefault();
-        const ym = yScale.invert(d3.event.layerY);
-        const xm = xScale.invert(d3.event.layerX);
-        const i1 = d3.bisectLeft(data.haxis, xm, 1);
-        const i0 = i1 - 1;
-        const ii = xm - data.haxis[i0] > data.haxis[i1] - xm ? i1 : i0;
-        console.log(data.haxis[ii] + ',' + data.long[ii] + ',' + data.short[ii]);*/
         })
         .on('mouseout', function (d, i) {
         d3.select(this).transition().duration(100).attr('stroke', '#009FFD');
+        dot.attr("display", "none");
         })
         .on('click', function () {
         alert('曲线事件已触发！');
@@ -131,12 +136,24 @@
         })
         .on('mousemove', function (d, i) {
         d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
+        d3.event.preventDefault();
+        dot.attr("display", null);
+        console.log(d3.event.layerX + '--' + d3.event.layerY);
+        if(d3.event.layerX <= SVG_SIZE.width && d3.event.layerX >= 0)
+        {
+        let offset = (d3.event.layerX - SVG_MARGIN.left) / ((SVG_SIZE.width - SVG_MARGIN.right - SVG_MARGIN.left)/ data.haxis.length );
+        let index = parseInt(offset.toString());
+        console.log(offset + ']------' + index + ']------' + data.haxis[index] + ',' + data.long[index] + ',' + data.short[index]);
+        dot.attr('transform', 'translate('+ d3.event.layerX +',' + d3.event.layerY + ')');
+        dot.select("text").text('日期:' + data.haxis[index] + ',空单:' + data.long[index]);
+        }
         })
         .on('mouseover', function (d, i) {
         d3.select(this).transition().duration(100).attr('stroke', '#CB7730');
         })
         .on('mouseout', function (d, i) {
         d3.select(this).transition().duration(100).attr('stroke', 'blueviolet');
+        dot.attr("display", "none");
         })
         .on('click', function () {
         alert('曲线事件已触发！');
