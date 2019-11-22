@@ -73,6 +73,9 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 	std::string S10 = "";
 	std::string L20 = "";
 	std::string S20 = "";
+	std::string L5S = "";
+	std::string L10S = "";
+	std::string L20S = "";
 	std::map<std::string, std::string> umap;
 	setlocale(LC_ALL, "chs");
 	calc_date_list(umap, date, count);
@@ -83,6 +86,9 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 	S10.append("[");
 	L20.append("[");
 	S20.append("[");
+	L5S.append("[");
+	L10S.append("[");
+	L20S.append("[");
 	for (auto& it : umap)
 	{
 		std::string data("");
@@ -119,6 +125,9 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 				}
 				if (nIndex1 >= 0 && nIndex1 < svv1.at(0).size())
 				{
+					// 2-多单手数
+					// 3-变化手数
+					int nChangeIndex = 1;
 					T = svv1.at(0).at(nIndex1).c_str();
 					//printf("%s,%s\n", svv1.at(0).at(nIndex).c_str(), svv1.at(1).at(nIndex).c_str());
 					X.append("'").append(it.first).append("',");
@@ -132,38 +141,51 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 						int nSumLong = 0;
 						int nSumShort = 0;
 						//printf("%s,%s\n", svv3.at(0).at(nIndexLong).c_str(), svv3.at(1).at(nIndexLong).c_str());
-						nSumLong += std::stoi(svv3.at(2).at(nIndexLong + 1).c_str());
-						nSumLong += std::stoi(svv3.at(2).at(nIndexLong + 2).c_str());
-						nSumLong += std::stoi(svv3.at(2).at(nIndexLong + 3).c_str());
-						nSumLong += std::stoi(svv3.at(2).at(nIndexLong + 4).c_str());
-						nSumLong += std::stoi(svv3.at(2).at(nIndexLong + 5).c_str());
-						//持买量
-						L5.append("'").append(std::to_string(nSumLong)).append("',");
-						nSumLong += std::stoi(svv3.at(2).at(nIndexLong + 6).c_str());
-						nSumLong += std::stoi(svv3.at(2).at(nIndexLong + 7).c_str());
-						nSumLong += std::stoi(svv3.at(2).at(nIndexLong + 8).c_str());
-						nSumLong += std::stoi(svv3.at(2).at(nIndexLong + 9).c_str());
-						nSumLong += std::stoi(svv3.at(2).at(nIndexLong + 10).c_str());
-						//持买量
-						L10.append("'").append(std::to_string(nSumLong)).append("',");
-
-						nSumShort += std::stoi(svv3.at(2).at(nIndexShort + 1).c_str());
-						nSumShort += std::stoi(svv3.at(2).at(nIndexShort + 2).c_str());
-						nSumShort += std::stoi(svv3.at(2).at(nIndexShort + 3).c_str());
-						nSumShort += std::stoi(svv3.at(2).at(nIndexShort + 4).c_str());
-						nSumShort += std::stoi(svv3.at(2).at(nIndexShort + 5).c_str());
+						for (size_t i = 1; i <= 5; i++)
+						{
+							nSumLong += std::stoi(svv3.at(2).at(nIndexLong + i).c_str());
+						}
+						for (size_t i = 1; i <= 5; i++)
+						{
+							nSumShort += std::stoi(svv3.at(2).at(nIndexShort + i).c_str());
+						}
 						//持买量
 						S5.append("'").append(std::to_string(nSumShort)).append("',");
-						nSumShort += std::stoi(svv3.at(2).at(nIndexShort + 6).c_str());
-						nSumShort += std::stoi(svv3.at(2).at(nIndexShort + 7).c_str());
-						nSumShort += std::stoi(svv3.at(2).at(nIndexShort + 8).c_str());
-						nSumShort += std::stoi(svv3.at(2).at(nIndexShort + 9).c_str());
-						nSumShort += std::stoi(svv3.at(2).at(nIndexShort + 10).c_str());
+						//持卖量
+						L5.append("'").append(std::to_string(nSumLong)).append("',");
+						//持买量-持卖量
+						L5S.append("'").append(std::to_string(nSumLong - nSumShort)).append("',");
+						for (size_t i = 6; i <= 10; i++)
+						{
+							nSumLong += std::stoi(svv3.at(2).at(nIndexLong + i).c_str());
+						}
+						for (size_t i = 6; i <= 10; i++)
+						{
+							nSumShort += std::stoi(svv3.at(2).at(nIndexShort + i).c_str());
+						}
 						//持买量
+						L10.append("'").append(std::to_string(nSumLong)).append("',");
+						//持卖量
 						S10.append("'").append(std::to_string(nSumShort)).append("',");
+						//持买量-持卖量
+						L10S.append("'").append(std::to_string(nSumLong - nSumShort)).append("',");
+						for (size_t i = 11; i <= 20; i++)
+						{
+							nSumLong += std::stoi(svv3.at(2).at(nIndexLong + i).c_str());
+						}
+						for (size_t i = 11; i <= 20; i++)
+						{
+							nSumShort += std::stoi(svv3.at(2).at(nIndexShort + i).c_str());
+						}
+						//持买量
+						L20.append("'").append(std::to_string(nSumLong)).append("',");
+						//持卖量
+						S20.append("'").append(std::to_string(nSumShort)).append("',");
+						//持买量-持卖量
+						L20S.append("'").append(std::to_string(nSumLong - nSumShort)).append("',");
 					}
 
-					flag = string_regex_find(result, svv2, out.c_str(), pattern2);
+					/*flag = string_regex_find(result, svv2, out.c_str(), pattern2);
 					//printf("flag = %d\n", flag);
 					if (svv2.size())
 					{
@@ -177,7 +199,7 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 						//持卖量
 						it.second = svv2.at(0).at(nIndex2 + 2);
 						S20.append("'").append(svv2.at(0).at(nIndex2 + 2)).append("',");
-					}
+					}*/
 				}
 			}
 		}
@@ -239,6 +261,31 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 	{
 		S20.append("]");
 	}
+
+	if (L5S.length() > 1)
+	{
+		*L5S.rbegin() = ']';
+	}
+	else
+	{
+		L5S.append("]");
+	}
+	if (L10S.length() > 1)
+	{
+		*L10S.rbegin() = ']';
+	}
+	else
+	{
+		L10S.append("]");
+	}
+	if (L20S.length() > 1)
+	{
+		*L20S.rbegin() = ']';
+	}
+	else
+	{
+		L20S.append("]");
+	}
 	std::string temp;
 	file_reader(temp, "chart.html");
 	string_replace_all(temp, X, "XXXXXX");
@@ -248,6 +295,9 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 	string_replace_all(temp, S10, "SSS10SSS");
 	string_replace_all(temp, L20, "LLL20LLL");
 	string_replace_all(temp, S20, "SSS20SSS");
+	string_replace_all(temp, L5S, "LLL5SSS");
+	string_replace_all(temp, L10S, "LLL10SSS");
+	string_replace_all(temp, L20S, "LLL20SSS");
 	//file_writer(temp, T + ".html");
 	return temp;
 }
@@ -340,8 +390,22 @@ int main(int argc, char** argv)
 						product_name = svv.at(0).at(0);
 						date = svv.at(1).at(0);
 						days = svv.at(2).at(0);
-						//printf("{==%.*s==%.*s==%.*s}\n", product_name.length(), product_name.data(), date.length(), date.data(), days.length(), days.data());
-						res->writeHeader("Content-Type", "text/html; charset=utf-8")->end(dce_chart(product_name, date, std::stoi(days)).c_str());
+						try
+						{
+							if (std::stoi(days) > 31)
+							{
+								res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("param error!days cannot more than 31");
+							}
+							else
+							{
+								//printf("{==%.*s==%.*s==%.*s}\n", product_name.length(), product_name.data(), date.length(), date.data(), days.length(), days.data());
+								res->writeHeader("Content-Type", "text/html; charset=utf-8")->end(dce_chart(product_name, date, std::stoi(days)).c_str());
+							}
+						}
+						catch (const std::exception&)
+						{
+							res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("param error!");
+						}
 					}
 					else
 					{
