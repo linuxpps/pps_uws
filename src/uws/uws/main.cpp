@@ -421,8 +421,26 @@ int main(int argc, char** argv)
 				printf("==%.*s\n", param0.length(), param0.data());
 				std::string_view param1 = req->getParameter(1);
 				printf("==%.*s\n", param1.length(), param1.data());
+				/* Allocate automatic, stack, variable as usual */
+				std::string buffer("");
+				/* Move it to storage of lambda */
+				res->onData([res, buffer = std::move(buffer)](std::string_view data, bool last) mutable {
+					/* Mutate the captured data */
+					buffer.append(data.data(), data.length());
 
-				res->writeHeader("Content-Type", "text/html; charset=utf-8")->end(dce_chart("a2005", "20191119", 4).c_str());
+					if (last) {
+						/* Use the data */
+						std::cout << "We got all data, length: " << buffer.length() << std::endl;
+						std::cout << "data=" << buffer << std::endl;
+						//us_listen_socket_close(listen_socket);
+						//res->end("Thanks for the data!");
+
+						res->writeHeader("Content-Type", "text/html; charset=utf-8")->end(dce_chart("a2005", "20191119", 4).c_str());
+						std::cout << "end req" << std::endl;
+						/* When this socket dies (times out) it will RAII release everything */
+					}
+				});
+				/* Unwind stack, delete buffer, will just skip (heap) destruction since it was moved */
 				})
 			.get("/*", [&asyncFileStreamer](auto* res, auto* req) {
 				serveFile(res, req);
