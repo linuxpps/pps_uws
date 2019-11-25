@@ -78,6 +78,9 @@
     <Filter Include="rapidjson\include\rapidjson\msinttypes">
       <UniqueIdentifier>{e6a02c10-7188-4e8f-bd67-bc4a9aafc2be}</UniqueIdentifier>
     </Filter>
+    <Filter Include="uws\d3">
+      <UniqueIdentifier>{099ae7eb-b0c8-4b16-9aed-19cc66580216}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\uWebSockets\src\App.h">
@@ -314,6 +317,12 @@
       <Filter>uws</Filter>
     </None>
     <None Include="..\setup_deps.bat" />
+    <None Include="d3\d3.js">
+      <Filter>uws\d3</Filter>
+    </None>
+    <None Include="d3\d3.min.js">
+      <Filter>uws\d3</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="favicon.ico">

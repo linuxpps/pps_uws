@@ -458,52 +458,7 @@ int main(int argc, char** argv)
 			AsyncFileStreamer asyncFileStreamer(root);
 			if (memcmp(&ssl_options, &empty_ssl_options, sizeof(empty_ssl_options))) {
 				/* HTTPS */
-				uWS::SSLApp(ssl_options)
-					.get("/*", [&asyncFileStreamer](auto* res, auto* req) {
-						ATTACH_ABORT_HANDLE(res);
-						serveFile(res, req);
-						asyncFileStreamer.streamFile(res, req->getUrl());
-					})
-					/*.ws<PerSocketData>("/*", {
-						// Settings
-						.compression = uWS::SHARED_COMPRESSOR,
-						.maxPayloadLength = 16 * 1024,
-						.idleTimeout = 10,
-						.maxBackpressure = 1 * 1024 * 1204,
-						// Handlers
-						.open = [](auto* ws, auto* req) {
-
-						},
-						.message = [](auto* ws, std::string_view message, uWS::OpCode opCode) {
-							ws->send(message, opCode);
-						},
-						.drain = [](auto* ws) {
-							// Check getBufferedAmount here
-						},
-						.ping = [](auto* ws) {
-
-						},
-						.pong = [](auto* ws) {
-
-						},
-						.close = [](auto* ws, int code, std::string_view message) {
-
-						}
-					})*/
-					.listen(port, [port, root](auto* token) {
-						if (token) {
-							std::cout << "Serving " << root << " over HTTPS a " << port << std::endl;
-							std::cout << "Thread " << std::this_thread::get_id() << " listening on port " << port << std::endl;
-						}
-						else {
-							std::cout << "Thread " << std::this_thread::get_id() << " failed to listen on port " << port << std::endl;
-						}
-					}).run();
-			}
-			else {
-				/* HTTP */
-				uWS::App()
-					.ws<PerSocketData>("/*", {
+				uWS::SSLApp(ssl_options).ws<PerSocketData>("/*", {
 						// Settings
 						.compression = uWS::SHARED_COMPRESSOR,
 						.maxPayloadLength = 16 * 1024,
@@ -531,7 +486,12 @@ int main(int argc, char** argv)
 							std::cout << "Close:" << code << std::endl;
 						}
 					})
-					.post("/post-chart", [](auto* res, auto* req) {
+					.get("/*", [&asyncFileStreamer](auto* res, auto* req) {
+						ATTACH_ABORT_HANDLE(res);
+						serveFile(res, req);
+						asyncFileStreamer.streamFile(res, req->getUrl());
+					})
+					.post("/*", [](auto* res, auto* req) {
 						ATTACH_ABORT_HANDLE(res);
 						std::string_view url = req->getUrl();
 						printf("==%.*s\n", url.length(), url.data());
@@ -573,6 +533,47 @@ int main(int argc, char** argv)
 							}
 						});
 						/* Unwind stack, delete buffer, will just skip (heap) destruction since it was moved */
+							})
+					.listen(port, [port, root](auto* token) {
+						if (token) {
+							std::cout << "Serving " << root << " over HTTPS a " << port << std::endl;
+							std::cout << "Thread " << std::this_thread::get_id() << " listening on port " << port << std::endl;
+						}
+						else {
+							std::cout << "Thread " << std::this_thread::get_id() << " failed to listen on port " << port << std::endl;
+						}
+					}).run();
+			}
+			else {
+				/* HTTP */
+				uWS::App()
+					.ws<PerSocketData>("/*", {
+						// Settings
+						.compression = uWS::SHARED_COMPRESSOR,
+						.maxPayloadLength = 16 * 1024,
+						.idleTimeout = 10,
+						.maxBackpressure = 1 * 1024 * 1204,
+						// Handlers
+						.open = [](auto* ws, auto* req) {
+							std::cout << "open" << std::endl;
+						},
+						.message = [](auto* ws, std::string_view message, uWS::OpCode opCode) {
+							std::cout << "message" << std::endl;
+							ws->send(message, opCode);
+						},
+						.drain = [](auto* ws) {
+							// Check getBufferedAmount here
+							std::cout << "drain" << std::endl;
+						},
+						.ping = [](auto* ws) {
+							std::cout << "ping" << std::endl;
+						},
+						.pong = [](auto* ws) {
+							std::cout << "pong" << std::endl;
+						},
+						.close = [](auto* ws, int code, std::string_view message) {
+							std::cout << "Close:" << code << std::endl;
+						}
 					})
 					.get("/*", [&asyncFileStreamer](auto* res, auto* req) {
 						ATTACH_ABORT_HANDLE(res);
@@ -633,6 +634,49 @@ int main(int argc, char** argv)
 							serveFile(res, req);
 							asyncFileStreamer.streamFile(res, req->getUrl());
 						}
+					})
+					.post("/*", [](auto* res, auto* req) {
+						ATTACH_ABORT_HANDLE(res);
+						std::string_view url = req->getUrl();
+						printf("==%.*s\n", url.length(), url.data());
+						std::string_view query = req->getQuery();
+						printf("==%.*s\n", query.length(), query.data());
+						std::string_view param0 = req->getParameter(0);
+						printf("==%.*s\n", param0.length(), param0.data());
+						std::string_view param1 = req->getParameter(1);
+						printf("==%.*s\n", param1.length(), param1.data());
+
+						/* Allocate automatic, stack, variable as usual */
+						std::string buffer("");
+						/* Move it to storage of lambda */
+						res->onData([res, buffer = std::move(buffer)](std::string_view data, bool last) mutable {
+							/* Mutate the captured data */
+							buffer.append(data.data(), data.length());
+
+							if (last) {
+								/* Use the data */
+								std::cout << "We got all data, length: " << buffer.length() << std::endl;
+								std::cout << "data=" << buffer << std::endl;
+								//us_listen_socket_close(listen_socket);
+								//res->end("Thanks for the data!");
+								{
+									std::string data(buffer.c_str(), buffer.length());
+									file_writer(data, "out.txt");
+									std::string value = string_reader(data, "----------------------------", "\r\n");
+									std::string flags = "----------------------------" + value;
+									std::cout << "#######################################################" << std::endl;
+									std::cout << "value=" << value << std::endl;
+
+									rapidjson::Document d;
+									rapidjson::Value& v = body_to_json(d, data, flags + "\r\n");
+									printf("value = %s\n", JSON_VALUE_2_STRING(v).c_str());
+								}
+								res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("[OK]");
+								std::cout << "end req" << std::endl;
+								/* When this socket dies (times out) it will RAII release everything */
+							}
+						});
+						/* Unwind stack, delete buffer, will just skip (heap) destruction since it was moved */
 					})
 					.listen(port, [port, root](auto* token) {
 						if (token) {

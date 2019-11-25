@@ -164,6 +164,8 @@
     <None Include="..\uWebSockets\Makefile" />
     <None Include="..\uWebSockets\uSockets\Makefile" />
     <None Include="chart.html" />
+    <None Include="d3\d3.js" />
+    <None Include="d3\d3.min.js" />
     <None Include="dce.csv" />
   </ItemGroup>
   <ItemGroup>
@@ -179,7 +181,7 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>cp ./chart.html ../bin/$(Platform)/$(Configuration)/ -f</Command>
+      <Command>cp ./chart.html ./d3 ./favicon.ico ../bin/$(Platform)/$(Configuration)/ -rf</Command>
     </RemotePostBuildEvent>
     <RemotePreBuildEvent>
       <Command>
@@ -196,7 +198,7 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>cp ./chart.html ../bin/$(Platform)/$(Configuration)/ -f</Command>
+      <Command>cp ./chart.html ./d3 ./favicon.ico ../bin/$(Platform)/$(Configuration)/ -rf</Command>
     </RemotePostBuildEvent>
     <RemotePreBuildEvent>
       <Command>
@@ -213,7 +215,7 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>cp ./chart.html ../bin/$(Platform)/$(Configuration)/ -f</Command>
+      <Command>cp ./chart.html ./d3 ./favicon.ico ../bin/$(Platform)/$(Configuration)/ -rf</Command>
     </RemotePostBuildEvent>
     <RemotePreBuildEvent>
       <Command>
@@ -230,7 +232,7 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>cp ./chart.html ../bin/$(Platform)/$(Configuration)/ -f</Command>
+      <Command>cp ./chart.html ./d3 ./favicon.ico ../bin/$(Platform)/$(Configuration)/ -rf</Command>
     </RemotePostBuildEvent>
     <RemotePreBuildEvent>
       <Command>
@@ -247,7 +249,7 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>cp ./chart.html ../bin/$(Platform)/$(Configuration)/ -f</Command>
+      <Command>cp ./chart.html ./d3 ./favicon.ico ../bin/$(Platform)/$(Configuration)/ -rf</Command>
     </RemotePostBuildEvent>
     <RemotePreBuildEvent>
       <Command>
@@ -264,7 +266,7 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>cp ./chart.html ../bin/$(Platform)/$(Configuration)/ -f</Command>
+      <Command>cp ./chart.html ./d3 ./favicon.ico ../bin/$(Platform)/$(Configuration)/ -rf</Command>
     </RemotePostBuildEvent>
     <RemotePreBuildEvent>
       <Command>
@@ -281,7 +283,7 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>cp ./chart.html ../bin/$(Platform)/$(Configuration)/ -f</Command>
+      <Command>cp ./chart.html ./d3 ./favicon.ico ../bin/$(Platform)/$(Configuration)/ -rf</Command>
     </RemotePostBuildEvent>
     <RemotePreBuildEvent>
       <Command>
@@ -298,7 +300,7 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>cp ./chart.html ../bin/$(Platform)/$(Configuration)/ -f</Command>
+      <Command>cp ./chart.html ./d3 ./favicon.ico ../bin/$(Platform)/$(Configuration)/ -rf</Command>
     </RemotePostBuildEvent>
     <RemotePreBuildEvent>
       <Command>
