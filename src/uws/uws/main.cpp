@@ -17,6 +17,8 @@
 
 #include <map>
 
+#define ATTACH_ABORT_HANDLE(res) res->onAborted([]() {std::cout << "ABORTED!" << std::endl;})
+
 bool is_trade_day(const time_t& tt)
 {
 	struct tm* ptm = localtime(&tt);
@@ -113,6 +115,7 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 			flag = string_regex_find(result, svv1, out.c_str(), pattern1);
 			//printf("flag = %d\n", flag);
 			int nIndex1 = (-1);
+			printf("svv1->size=%d,svv1->begin()->size=%d\n", svv1.size(), svv1.begin()->size());
 			if (svv1.size())
 			{
 				for (size_t i = 0; i < svv1.at(0).size(); i++)
@@ -129,13 +132,14 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 					// 3-变化手数
 					int nChangeIndex = 1;
 					T = svv1.at(0).at(nIndex1).c_str();
-					//printf("%s,%s\n", svv1.at(0).at(nIndex).c_str(), svv1.at(1).at(nIndex).c_str());
+					//printf("%s,%s\n", svv1.at(0).at(nIndex1).c_str(), svv1.at(1).at(nIndex1).c_str());
 					X.append("'").append(it.first).append("',");
 
 					flag = string_regex_find(result, svv3, out.c_str(), pattern3);
 					//printf("flag = %d\n", flag);
-					if (svv3.size())
+					if (svv3.size() && svv3.begin()->size() % 63 == 0)
 					{
+						//printf("svv3->size=%d,svv3->begin()->size=%d\n", svv3.size(), svv3.begin()->size());
 						int nIndexLong = nIndex1 * 63 + 21;
 						int nIndexShort = nIndex1 * 63 + 42;
 						int nSumLong = 0;
@@ -143,10 +147,12 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 						//printf("%s,%s\n", svv3.at(0).at(nIndexLong).c_str(), svv3.at(1).at(nIndexLong).c_str());
 						for (size_t i = 1; i <= 5; i++)
 						{
+							//printf("[long]i=%d,%s\n", i, svv3.at(2).at(nIndexLong + i).c_str());
 							nSumLong += std::stoi(svv3.at(2).at(nIndexLong + i).c_str());
 						}
 						for (size_t i = 1; i <= 5; i++)
 						{
+							//printf("[short]i=%d,%s\n", i, svv3.at(2).at(nIndexShort + i).c_str());
 							nSumShort += std::stoi(svv3.at(2).at(nIndexShort + i).c_str());
 						}
 						//持买量
@@ -157,10 +163,12 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 						L5S.append("'").append(std::to_string(nSumLong - nSumShort)).append("',");
 						for (size_t i = 6; i <= 10; i++)
 						{
+							//printf("[long]i=%d,%s\n", i, svv3.at(2).at(nIndexLong + i).c_str());
 							nSumLong += std::stoi(svv3.at(2).at(nIndexLong + i).c_str());
 						}
 						for (size_t i = 6; i <= 10; i++)
 						{
+							//printf("[short]i=%d,%s\n", i, svv3.at(2).at(nIndexShort + i).c_str());
 							nSumShort += std::stoi(svv3.at(2).at(nIndexShort + i).c_str());
 						}
 						//持买量
@@ -171,10 +179,12 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 						L10S.append("'").append(std::to_string(nSumLong - nSumShort)).append("',");
 						for (size_t i = 11; i <= 20; i++)
 						{
+							//printf("[long]i=%d,%s\n", i, svv3.at(2).at(nIndexLong + i).c_str());
 							nSumLong += std::stoi(svv3.at(2).at(nIndexLong + i).c_str());
 						}
 						for (size_t i = 11; i <= 20; i++)
 						{
+							//printf("[short]i=%d,%s\n", i, svv3.at(2).at(nIndexShort + i).c_str());
 							nSumShort += std::stoi(svv3.at(2).at(nIndexShort + i).c_str());
 						}
 						//持买量
@@ -301,6 +311,7 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 	//file_writer(temp, T + ".html");
 	return temp;
 }
+
 int main(int argc, char** argv) 
 {
 	//test_chart();
@@ -371,10 +382,12 @@ int main(int argc, char** argv)
 		/* HTTP */
 		uWS::App()
 			.get("/hello", [](auto* res, auto* req) {
-			/* You can efficiently stream huge files too */
-			res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("Hello HTTP!");
+					ATTACH_ABORT_HANDLE(res);
+					/* You can efficiently stream huge files too */
+					res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("Hello HTTP!");
 				})
 			.get("/chart", [](auto* res, auto* req) {
+					ATTACH_ABORT_HANDLE(res);
 					std::string_view url = req->getUrl();
 					//printf("==%.*s\n", url.length(), url.data());
 					std::string_view query = req->getQuery();
@@ -392,7 +405,7 @@ int main(int argc, char** argv)
 						days = svv.at(2).at(0);
 						try
 						{
-							if (std::stoi(days) > 31)
+							/*if (std::stoi(days) > 31)
 							{
 								res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("param error!days cannot more than 31");
 							}
@@ -400,10 +413,12 @@ int main(int argc, char** argv)
 							{
 								//printf("{==%.*s==%.*s==%.*s}\n", product_name.length(), product_name.data(), date.length(), date.data(), days.length(), days.data());
 								res->writeHeader("Content-Type", "text/html; charset=utf-8")->end(dce_chart(product_name, date, std::stoi(days)).c_str());
-							}
+							}*/
+							res->writeHeader("Content-Type", "text/html; charset=utf-8")->end(dce_chart(product_name, date, std::stoi(days)).c_str());
 						}
-						catch (const std::exception&)
+						catch (const std::exception& e)
 						{
+							std::cout << "Exception:" << e.what() << std::endl;
 							res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("param error!");
 						}
 					}
@@ -413,6 +428,7 @@ int main(int argc, char** argv)
 					}
 				})
 			.post("/post-chart", [](auto* res, auto* req) {
+				ATTACH_ABORT_HANDLE(res);
 				std::string_view url = req->getUrl();
 				printf("==%.*s\n", url.length(), url.data());
 				std::string_view query = req->getQuery();
@@ -421,6 +437,7 @@ int main(int argc, char** argv)
 				printf("==%.*s\n", param0.length(), param0.data());
 				std::string_view param1 = req->getParameter(1);
 				printf("==%.*s\n", param1.length(), param1.data());
+
 				/* Allocate automatic, stack, variable as usual */
 				std::string buffer("");
 				/* Move it to storage of lambda */
@@ -443,6 +460,7 @@ int main(int argc, char** argv)
 				/* Unwind stack, delete buffer, will just skip (heap) destruction since it was moved */
 				})
 			.get("/*", [&asyncFileStreamer](auto* res, auto* req) {
+				ATTACH_ABORT_HANDLE(res);
 				serveFile(res, req);
 				asyncFileStreamer.streamFile(res, req->getUrl());
 			})
