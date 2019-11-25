@@ -312,6 +312,85 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 	return temp;
 }
 
+#include <rapidjson/rapidjson.h>
+#include <rapidjson/reader.h>
+#include <rapidjson/writer.h>
+#include <rapidjson/document.h>
+__inline static
+std::string JSON_VALUE_2_STRING(rapidjson::Value& v)
+{
+	rapidjson::StringBuffer sb;
+	rapidjson::Writer<rapidjson::StringBuffer> writer(sb);
+	return (v.Accept(writer) ? std::string(sb.GetString(), sb.GetSize()) : (""));
+}
+__inline static
+rapidjson::Value& STRING_2_JSON_VALUE(rapidjson::Document& d, const std::string& s)
+{
+	rapidjson::Value& v = d.SetObject();
+	d.Parse(s.c_str(), s.size());
+	return v;
+}
+__inline static 
+void data_to_json(rapidjson::Value& v, const std::string& data, rapidjson::Document::AllocatorType & allocator)
+{
+	std::string name = string_reader(data, "; name=\"", "\"");
+	std::string filename = string_reader(data, "; filename=\"", "\"");
+	if (name.length() > 0 && filename.length() == 0)
+	{
+		v.AddMember(rapidjson::Document().SetString(name.c_str(), name.length(), allocator), "", allocator);
+		if (data.find("Content-Type") == std::string::npos)
+		{
+			std::string text = string_reader(data, "; name=\"" + name + "\"\r\n", "\r\n");
+			v[name.c_str()].SetString(text.c_str(), text.length(), allocator);
+		}
+	}
+	else if (name.length() > 0 && filename.length() > 0)
+	{
+		v.AddMember(rapidjson::Document().SetString(name.c_str(), name.length(), allocator), "", allocator);
+		v[name.c_str()].SetString(filename.c_str(), filename.length(), allocator);
+	}
+	else if (name.length() == 0 && filename.length() > 0)
+	{
+		v.AddMember(rapidjson::Document().SetString(filename.c_str(), filename.length(), allocator), "", allocator);
+		v[filename.c_str()].SetString(name.c_str(), name.length(), allocator);
+	}
+	else
+	{
+		//none
+	}
+}
+__inline static
+rapidjson::Value& body_to_json(rapidjson::Document& d, const std::string& strData, const std::string& strSplitter, std::string::size_type stPos = 0)
+{
+	std::string tmp = ("");
+	rapidjson::Value & v = d.SetObject();
+	std::string::size_type stIdx = 0;
+	std::string::size_type stSize = strData.length();
+	if (d.Parse(strData.c_str()).HasParseError())
+	{
+		while ((stPos = strData.find(strSplitter, stIdx)) != std::string::npos)
+		{
+			tmp = strData.substr(stIdx, stPos - stIdx);
+			if (tmp.length() > 0)
+			{
+				data_to_json(v, tmp, d.GetAllocator());
+			}
+
+			stIdx = stPos + strSplitter.length();
+		}
+
+		if (stIdx < stSize)
+		{
+			tmp = strData.substr(stIdx, stSize - stIdx);
+			if (tmp.length() > 0)
+			{
+				data_to_json(v, tmp, d.GetAllocator());
+			}
+		}
+	}
+	return v;
+}
+
 int main(int argc, char** argv) 
 {
 	//test_chart();
@@ -451,8 +530,19 @@ int main(int argc, char** argv)
 						std::cout << "data=" << buffer << std::endl;
 						//us_listen_socket_close(listen_socket);
 						//res->end("Thanks for the data!");
+						{
+							std::string data(buffer.c_str(), buffer.length());
+							file_writer(data, "out.txt");
+							std::string value = string_reader(data, "----------------------------", "\r\n");
+							std::string flags = "----------------------------" + value;
+							std::cout << "#######################################################" << std::endl;
+							std::cout << "value=" << value << std::endl;
 
-						res->writeHeader("Content-Type", "text/html; charset=utf-8")->end(dce_chart("a2005", "20191119", 4).c_str());
+							rapidjson::Document d;
+							rapidjson::Value & v = body_to_json(d, data, flags + "\r\n");
+							printf("value = %s\n", JSON_VALUE_2_STRING(v).c_str());
+						}
+						res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("[OK]");
 						std::cout << "end req" << std::endl;
 						/* When this socket dies (times out) it will RAII release everything */
 					}

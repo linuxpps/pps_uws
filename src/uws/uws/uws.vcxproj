@@ -85,6 +85,43 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\rapidjson\include\rapidjson\allocators.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\cursorstreamwrapper.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\document.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\encodedstream.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\encodings.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\error\en.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\error\error.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\filereadstream.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\filewritestream.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\fwd.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\internal\biginteger.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\internal\clzll.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\internal\diyfp.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\internal\dtoa.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\internal\ieee754.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\internal\itoa.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\internal\meta.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\internal\pow10.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\internal\regex.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\internal\stack.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\internal\strfunc.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\internal\strtod.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\internal\swap.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\istreamwrapper.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\memorybuffer.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\memorystream.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\msinttypes\inttypes.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\msinttypes\stdint.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\ostreamwrapper.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\pointer.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\prettywriter.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\rapidjson.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\reader.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\schema.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\stream.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\stringbuffer.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\writer.h" />
     <ClInclude Include="..\uWebSockets\src\App.h" />
     <ClInclude Include="..\uWebSockets\src\AsyncSocket.h" />
     <ClInclude Include="..\uWebSockets\src\AsyncSocketData.h" />
@@ -134,7 +171,7 @@
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)uWebSockets\src;$(SolutionDir)uWebSockets\uSockets\src;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)rapidjson\include;$(SolutionDir)uWebSockets\src;$(SolutionDir)uWebSockets\uSockets\src;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>LIBUS_NO_SSL;LIBUS_USE_LIBUV;</PreprocessorDefinitions>
       <CppLanguageStandard>c++17</CppLanguageStandard>
     </ClCompile>
@@ -151,7 +188,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)uWebSockets\src;$(SolutionDir)uWebSockets\uSockets\src;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)rapidjson\include;$(SolutionDir)uWebSockets\src;$(SolutionDir)uWebSockets\uSockets\src;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>LIBUS_NO_SSL;LIBUS_USE_LIBUV;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CppLanguageStandard>c++17</CppLanguageStandard>
     </ClCompile>
@@ -168,7 +205,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)uWebSockets\src;$(SolutionDir)uWebSockets\uSockets\src;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)rapidjson\include;$(SolutionDir)uWebSockets\src;$(SolutionDir)uWebSockets\uSockets\src;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>LIBUS_NO_SSL;LIBUS_USE_LIBUV;</PreprocessorDefinitions>
       <CppLanguageStandard>c++17</CppLanguageStandard>
     </ClCompile>
@@ -185,7 +222,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)uWebSockets\src;$(SolutionDir)uWebSockets\uSockets\src;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)rapidjson\include;$(SolutionDir)uWebSockets\src;$(SolutionDir)uWebSockets\uSockets\src;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>LIBUS_NO_SSL;LIBUS_USE_LIBUV;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CppLanguageStandard>c++17</CppLanguageStandard>
     </ClCompile>
@@ -202,7 +239,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)uWebSockets\src;$(SolutionDir)uWebSockets\uSockets\src;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)rapidjson\include;$(SolutionDir)uWebSockets\src;$(SolutionDir)uWebSockets\uSockets\src;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>LIBUS_NO_SSL;LIBUS_USE_LIBUV;</PreprocessorDefinitions>
       <CppLanguageStandard>c++17</CppLanguageStandard>
     </ClCompile>
@@ -219,7 +256,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)uWebSockets\src;$(SolutionDir)uWebSockets\uSockets\src;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)rapidjson\include;$(SolutionDir)uWebSockets\src;$(SolutionDir)uWebSockets\uSockets\src;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>LIBUS_NO_SSL;LIBUS_USE_LIBUV;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CppLanguageStandard>c++17</CppLanguageStandard>
     </ClCompile>
@@ -236,7 +273,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)uWebSockets\src;$(SolutionDir)uWebSockets\uSockets\src;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)rapidjson\include;$(SolutionDir)uWebSockets\src;$(SolutionDir)uWebSockets\uSockets\src;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>LIBUS_NO_SSL;LIBUS_USE_LIBUV;</PreprocessorDefinitions>
       <CppLanguageStandard>c++17</CppLanguageStandard>
     </ClCompile>
@@ -253,7 +290,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)uWebSockets\src;$(SolutionDir)uWebSockets\uSockets\src;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)rapidjson\include;$(SolutionDir)uWebSockets\src;$(SolutionDir)uWebSockets\uSockets\src;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>LIBUS_NO_SSL;LIBUS_USE_LIBUV;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CppLanguageStandard>c++17</CppLanguageStandard>
     </ClCompile>
