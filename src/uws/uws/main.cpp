@@ -16,6 +16,8 @@
 #include "signal_handler.h"
 
 #include <map>
+#include <thread>
+#include <algorithm>
 
 #define ATTACH_ABORT_HANDLE(res) res->onAborted([]() {std::cout << "ABORTED!" << std::endl;})
 
@@ -115,7 +117,7 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 			flag = string_regex_find(result, svv1, out.c_str(), pattern1);
 			//printf("flag = %d\n", flag);
 			int nIndex1 = (-1);
-			printf("svv1->size=%d,svv1->begin()->size=%d\n", svv1.size(), svv1.begin()->size());
+			//printf("svv1->size=%d,svv1->begin()->size=%d\n", svv1.size(), svv1.begin()->size());
 			if (svv1.size())
 			{
 				for (size_t i = 0; i < svv1.at(0).size(); i++)
@@ -391,14 +393,17 @@ rapidjson::Value& body_to_json(rapidjson::Document& d, const std::string& strDat
 	return v;
 }
 
-int main(int argc, char** argv) 
+int main(int argc, char** argv)
 {
 	//test_chart();
 	//return 0;
 	int option;
 	struct optparse options;
 	optparse_init(&options, argv);
+	/* ws->getUserData returns one of these */
+	struct PerSocketData {
 
+	};
 	struct optparse_long longopts[] = {
 		{"port", 'p', OPTPARSE_REQUIRED},
 		{"help", 'h', OPTPARSE_NONE},
@@ -411,6 +416,8 @@ int main(int argc, char** argv)
 
 	int port = 3000;
 	struct us_socket_context_options_t ssl_options = {};
+	/* Either serve over HTTP or HTTPS */
+	struct us_socket_context_options_t empty_ssl_options = {};
 
 	while ((option = optparse_long(&options, longopts, nullptr)) != -1) {
 		switch (option) {
@@ -442,124 +449,204 @@ int main(int argc, char** argv)
 		goto fail;
 	}
 
-	AsyncFileStreamer asyncFileStreamer(root);
+	/* Simple echo websocket server, using multiple threads */
+	std::vector<std::shared_ptr<std::thread>> threads(std::thread::hardware_concurrency());
+	
+	std::transform(threads.begin(), threads.end(), threads.begin(), [&](std::shared_ptr<std::thread> t) {
+		
+		return std::make_shared<std::thread>([&]() {
+			AsyncFileStreamer asyncFileStreamer(root);
+			if (memcmp(&ssl_options, &empty_ssl_options, sizeof(empty_ssl_options))) {
+				/* HTTPS */
+				uWS::SSLApp(ssl_options)
+					.get("/*", [&asyncFileStreamer](auto* res, auto* req) {
+						ATTACH_ABORT_HANDLE(res);
+						serveFile(res, req);
+						asyncFileStreamer.streamFile(res, req->getUrl());
+					})
+					/*.ws<PerSocketData>("/*", {
+						// Settings
+						.compression = uWS::SHARED_COMPRESSOR,
+						.maxPayloadLength = 16 * 1024,
+						.idleTimeout = 10,
+						.maxBackpressure = 1 * 1024 * 1204,
+						// Handlers
+						.open = [](auto* ws, auto* req) {
 
-	/* Either serve over HTTP or HTTPS */
-	struct us_socket_context_options_t empty_ssl_options = {};
-	if (memcmp(&ssl_options, &empty_ssl_options, sizeof(empty_ssl_options))) {
-		/* HTTPS */
-		uWS::SSLApp(ssl_options).get("/*", [&asyncFileStreamer](auto* res, auto* req) {
-			serveFile(res, req);
-			asyncFileStreamer.streamFile(res, req->getUrl());
-			}).listen(port, [port, root](auto* token) {
-				if (token) {
-					std::cout << "Serving " << root << " over HTTPS a " << port << std::endl;
-				}
-				}).run();
-	}
-	else {
-		/* HTTP */
-		uWS::App()
-			.get("/hello", [](auto* res, auto* req) {
-					ATTACH_ABORT_HANDLE(res);
-					/* You can efficiently stream huge files too */
-					res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("Hello HTTP!");
-				})
-			.get("/chart", [](auto* res, auto* req) {
-					ATTACH_ABORT_HANDLE(res);
-					std::string_view url = req->getUrl();
-					//printf("==%.*s\n", url.length(), url.data());
-					std::string_view query = req->getQuery();
-					//printf("==%.*s\n", query.length(), query.data());
-					std::string product_name = "";
-					std::string date = "";
-					std::string days = "";
-					std::string result = "";
-					std::vector<std::vector<std::string>> svv;
-					string_regex_find(result, svv, std::string(query.data(), query.length()), "p=(.*?)&d=(.*?)&c=(.*+)");
-					if (svv.size() > 0)
-					{
-						product_name = svv.at(0).at(0);
-						date = svv.at(1).at(0);
-						days = svv.at(2).at(0);
-						try
+						},
+						.message = [](auto* ws, std::string_view message, uWS::OpCode opCode) {
+							ws->send(message, opCode);
+						},
+						.drain = [](auto* ws) {
+							// Check getBufferedAmount here
+						},
+						.ping = [](auto* ws) {
+
+						},
+						.pong = [](auto* ws) {
+
+						},
+						.close = [](auto* ws, int code, std::string_view message) {
+
+						}
+					})*/
+					.listen(port, [port, root](auto* token) {
+						if (token) {
+							std::cout << "Serving " << root << " over HTTPS a " << port << std::endl;
+							std::cout << "Thread " << std::this_thread::get_id() << " listening on port " << port << std::endl;
+						}
+						else {
+							std::cout << "Thread " << std::this_thread::get_id() << " failed to listen on port " << port << std::endl;
+						}
+					}).run();
+			}
+			else {
+				/* HTTP */
+				uWS::App()
+					.ws<PerSocketData>("/*", {
+						// Settings
+						.compression = uWS::SHARED_COMPRESSOR,
+						.maxPayloadLength = 16 * 1024,
+						.idleTimeout = 10,
+						.maxBackpressure = 1 * 1024 * 1204,
+						// Handlers
+						.open = [](auto* ws, auto* req) {
+							std::cout << "open" << std::endl;
+						},
+						.message = [](auto* ws, std::string_view message, uWS::OpCode opCode) {
+							std::cout << "message" << std::endl;
+							ws->send(message, opCode);
+						},
+						.drain = [](auto* ws) {
+							// Check getBufferedAmount here
+							std::cout << "drain" << std::endl;
+						},
+						.ping = [](auto* ws) {
+							std::cout << "ping" << std::endl;
+						},
+						.pong = [](auto* ws) {
+							std::cout << "pong" << std::endl;
+						},
+						.close = [](auto* ws, int code, std::string_view message) {
+							std::cout << "Close:" << code << std::endl;
+						}
+					})
+					.post("/post-chart", [](auto* res, auto* req) {
+						ATTACH_ABORT_HANDLE(res);
+						std::string_view url = req->getUrl();
+						printf("==%.*s\n", url.length(), url.data());
+						std::string_view query = req->getQuery();
+						printf("==%.*s\n", query.length(), query.data());
+						std::string_view param0 = req->getParameter(0);
+						printf("==%.*s\n", param0.length(), param0.data());
+						std::string_view param1 = req->getParameter(1);
+						printf("==%.*s\n", param1.length(), param1.data());
+
+						/* Allocate automatic, stack, variable as usual */
+						std::string buffer("");
+						/* Move it to storage of lambda */
+						res->onData([res, buffer = std::move(buffer)](std::string_view data, bool last) mutable {
+							/* Mutate the captured data */
+							buffer.append(data.data(), data.length());
+
+							if (last) {
+								/* Use the data */
+								std::cout << "We got all data, length: " << buffer.length() << std::endl;
+								std::cout << "data=" << buffer << std::endl;
+								//us_listen_socket_close(listen_socket);
+								//res->end("Thanks for the data!");
+								{
+									std::string data(buffer.c_str(), buffer.length());
+									file_writer(data, "out.txt");
+									std::string value = string_reader(data, "----------------------------", "\r\n");
+									std::string flags = "----------------------------" + value;
+									std::cout << "#######################################################" << std::endl;
+									std::cout << "value=" << value << std::endl;
+
+									rapidjson::Document d;
+									rapidjson::Value& v = body_to_json(d, data, flags + "\r\n");
+									printf("value = %s\n", JSON_VALUE_2_STRING(v).c_str());
+								}
+								res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("[OK]");
+								std::cout << "end req" << std::endl;
+								/* When this socket dies (times out) it will RAII release everything */
+							}
+						});
+						/* Unwind stack, delete buffer, will just skip (heap) destruction since it was moved */
+					})
+					.get("/*", [&asyncFileStreamer](auto* res, auto* req) {
+						ATTACH_ABORT_HANDLE(res);
+
+						std::string_view url = req->getUrl();
+						if (std::string(url.data(), url.length()).compare(0, strlen("/hello"), "/hello") == 0)
 						{
-							/*if (std::stoi(days) > 31)
+							/* You can efficiently stream huge files too */
+							res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("Hello HTTP!");
+						}
+						else if(std::string(url.data(), url.length()).compare(0, strlen("/chart") , "/chart") == 0)
+						{
+							//printf("==%.*s\n", url.length(), url.data());
+							std::string_view query = req->getQuery();
+							//printf("==%.*s\n", query.length(), query.data());
+							std::string product_name = "";
+							std::string date = "";
+							std::string days = "";
+							std::string result = "";
+							std::vector<std::vector<std::string>> svv;
+							std::chrono::steady_clock::time_point s = std::chrono::steady_clock::now();
+							string_regex_find(result, svv, std::string(query.data(), query.length()), "p=(.*?)&d=(.*?)&c=(.*+)");
+							if (svv.size() > 0)
 							{
-								res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("param error!days cannot more than 31");
+								product_name = svv.at(0).at(0);
+								date = svv.at(1).at(0);
+								days = svv.at(2).at(0);
+								try
+								{
+									/*if (std::stoi(days) > 31)
+									{
+										res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("param error!days cannot more than 31");
+									}
+									else
+									{
+										//printf("{==%.*s==%.*s==%.*s}\n", product_name.length(), product_name.data(), date.length(), date.data(), days.length(), days.data());
+										res->writeHeader("Content-Type", "text/html; charset=utf-8")->end(dce_chart(product_name, date, std::stoi(days)).c_str());
+									}*/
+									res->writeHeader("Content-Type", "text/html; charset=utf-8")->end(dce_chart(product_name, date, std::stoi(days)).c_str());
+								}
+								catch (const std::exception & e)
+								{
+									std::cout << "Exception:" << e.what() << std::endl;
+									res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("param error!");
+								}
 							}
 							else
 							{
-								//printf("{==%.*s==%.*s==%.*s}\n", product_name.length(), product_name.data(), date.length(), date.data(), days.length(), days.data());
-								res->writeHeader("Content-Type", "text/html; charset=utf-8")->end(dce_chart(product_name, date, std::stoi(days)).c_str());
-							}*/
-							res->writeHeader("Content-Type", "text/html; charset=utf-8")->end(dce_chart(product_name, date, std::stoi(days)).c_str());
+								res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("param error!");
+							}
+							std::chrono::steady_clock::time_point e = std::chrono::steady_clock::now();
+							std::cout << "Printing took "
+								<< std::chrono::duration_cast<std::chrono::microseconds>(e - s).count()
+								<< "us.\n";
 						}
-						catch (const std::exception& e)
+						else
 						{
-							std::cout << "Exception:" << e.what() << std::endl;
-							res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("param error!");
+							serveFile(res, req);
+							asyncFileStreamer.streamFile(res, req->getUrl());
 						}
-					}
-					else
-					{
-						res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("param error!");
-					}
-				})
-			.post("/post-chart", [](auto* res, auto* req) {
-				ATTACH_ABORT_HANDLE(res);
-				std::string_view url = req->getUrl();
-				printf("==%.*s\n", url.length(), url.data());
-				std::string_view query = req->getQuery();
-				printf("==%.*s\n", query.length(), query.data());
-				std::string_view param0 = req->getParameter(0);
-				printf("==%.*s\n", param0.length(), param0.data());
-				std::string_view param1 = req->getParameter(1);
-				printf("==%.*s\n", param1.length(), param1.data());
-
-				/* Allocate automatic, stack, variable as usual */
-				std::string buffer("");
-				/* Move it to storage of lambda */
-				res->onData([res, buffer = std::move(buffer)](std::string_view data, bool last) mutable {
-					/* Mutate the captured data */
-					buffer.append(data.data(), data.length());
-
-					if (last) {
-						/* Use the data */
-						std::cout << "We got all data, length: " << buffer.length() << std::endl;
-						std::cout << "data=" << buffer << std::endl;
-						//us_listen_socket_close(listen_socket);
-						//res->end("Thanks for the data!");
-						{
-							std::string data(buffer.c_str(), buffer.length());
-							file_writer(data, "out.txt");
-							std::string value = string_reader(data, "----------------------------", "\r\n");
-							std::string flags = "----------------------------" + value;
-							std::cout << "#######################################################" << std::endl;
-							std::cout << "value=" << value << std::endl;
-
-							rapidjson::Document d;
-							rapidjson::Value & v = body_to_json(d, data, flags + "\r\n");
-							printf("value = %s\n", JSON_VALUE_2_STRING(v).c_str());
+					})
+					.listen(port, [port, root](auto* token) {
+						if (token) {
+							std::cout << "Serving " << root << " over HTTP a " << port << std::endl;
+							std::cout << "Thread " << std::this_thread::get_id() << " listening on port " << port << std::endl;
 						}
-						res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("[OK]");
-						std::cout << "end req" << std::endl;
-						/* When this socket dies (times out) it will RAII release everything */
-					}
-				});
-				/* Unwind stack, delete buffer, will just skip (heap) destruction since it was moved */
-				})
-			.get("/*", [&asyncFileStreamer](auto* res, auto* req) {
-				ATTACH_ABORT_HANDLE(res);
-				serveFile(res, req);
-				asyncFileStreamer.streamFile(res, req->getUrl());
-			})
-			.listen(port, [port, root](auto* token) {
-				if (token) {
-					std::cout << "Serving " << root << " over HTTP a " << port << std::endl;
-				}
-				}).run();
-	}
-
-	std::cout << "Failed to listen to port " << port << std::endl;
+						else {
+							std::cout << "Thread " << std::this_thread::get_id() << " failed to listen on port " << port << std::endl;
+						}
+					}).run();
+			}
+			});
+		});
+	std::for_each(threads.begin(), threads.end(), [](std::shared_ptr<std::thread> t) {
+		t->join();
+		});
 }
