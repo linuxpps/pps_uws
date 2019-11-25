@@ -171,9 +171,7 @@ private:
                 if (!((HttpResponse<SSL> *) s)->hasResponded() && !httpResponseData->onAborted) {
                     /* Throw exception here? */
                     std::cerr << "Error: Returning from a request handler without responding or attaching an abort handler is forbidden!" << std::endl;
-                    /* Terminate */
-					std::terminate();
-					return s;
+                    std::terminate();
                 }
 
                 /* If we have not responded and we have a data handler, we need to timeout to enfore client sending the data */
