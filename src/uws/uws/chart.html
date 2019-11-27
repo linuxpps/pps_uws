@@ -53,7 +53,7 @@
         let index = parseInt(offset.toString());
         console.log(offset + ']------' + index + ']------' + data.haxis[index] + ',' + data_list[index]);
         dot.attr('transform', 'translate(' + d3.event.layerX + ',' + d3.event.layerY + ')');
-        dot.select('text').text(tips_text + '日期:' + data.haxis[index] + ',数值:' + data_list[index]);
+        dot.select('text').text(tips_text + '|' + data.haxis[index] + '|' + data_list[index]);
         }
         })
         .on('mouseover', function (d, i) {
