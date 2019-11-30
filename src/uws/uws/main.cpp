@@ -138,22 +138,58 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 					X.append("'").append(it.first).append("',");
 
 					flag = string_regex_find(result, svv3, out.c_str(), pattern3);
+					int nIndexAll = 0;
+					int nIndexLong = 0;
+					int nIndexShort = 0;
+					int nIndexCounter = 0;
+					for (size_t i = 0; i < svv3.begin()->size(); i++)
+					{
+						if (svv3.at(0).at(i).compare("名次") == 0)
+						{
+							if ((nIndex1 * 3) == nIndexCounter)
+							{
+								nIndexAll = i;
+								for (size_t j = nIndexAll + 1; j < svv3.begin()->size(); j++)
+								{
+									if (nIndexLong == 0 && nIndexShort  == 0 && svv3.at(0).at(j).compare("名次") == 0)
+									{
+										nIndexLong = j;
+									}
+									else if (nIndexLong > 0 && nIndexShort == 0 && svv3.at(0).at(j).compare("名次") == 0)
+									{
+										nIndexShort = j;
+										break;
+									}
+								}
+								break;
+							}
+							nIndexCounter++;
+						}
+					}
 					//printf("flag = %d\n", flag);
-					if (svv3.size() && svv3.begin()->size() % 63 == 0)
+					if (svv3.size() && nIndexLong > 0 && nIndexShort > 0)
 					{
 						//printf("svv3->size=%d,svv3->begin()->size=%d\n", svv3.size(), svv3.begin()->size());
-						int nIndexLong = nIndex1 * 63 + 21;
-						int nIndexShort = nIndex1 * 63 + 42;
+						//int nIndexLong = nIndex1 * 63 + 21;
+						//int nIndexShort = nIndex1 * 63 + 42;
 						int nSumLong = 0;
 						int nSumShort = 0;
 						//printf("%s,%s\n", svv3.at(0).at(nIndexLong).c_str(), svv3.at(1).at(nIndexLong).c_str());
 						for (size_t i = 1; i <= 5; i++)
 						{
+							if (svv3.at(0).at(nIndexLong + i).compare("名次") == 0)
+							{
+								break;
+							}
 							//printf("[long]i=%d,%s\n", i, svv3.at(2).at(nIndexLong + i).c_str());
 							nSumLong += std::stoi(svv3.at(2).at(nIndexLong + i).c_str());
 						}
 						for (size_t i = 1; i <= 5; i++)
 						{
+							if (svv3.at(0).at(nIndexShort + i).compare("名次") == 0)
+							{
+								break;
+							}
 							//printf("[short]i=%d,%s\n", i, svv3.at(2).at(nIndexShort + i).c_str());
 							nSumShort += std::stoi(svv3.at(2).at(nIndexShort + i).c_str());
 						}
@@ -165,11 +201,19 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 						L5S.append("'").append(std::to_string(nSumLong - nSumShort)).append("',");
 						for (size_t i = 6; i <= 10; i++)
 						{
+							if (svv3.at(0).at(nIndexLong + i).compare("名次") == 0)
+							{
+								break;
+							}
 							//printf("[long]i=%d,%s\n", i, svv3.at(2).at(nIndexLong + i).c_str());
 							nSumLong += std::stoi(svv3.at(2).at(nIndexLong + i).c_str());
 						}
 						for (size_t i = 6; i <= 10; i++)
 						{
+							if (svv3.at(0).at(nIndexShort + i).compare("名次") == 0)
+							{
+								break;
+							}
 							//printf("[short]i=%d,%s\n", i, svv3.at(2).at(nIndexShort + i).c_str());
 							nSumShort += std::stoi(svv3.at(2).at(nIndexShort + i).c_str());
 						}
@@ -181,11 +225,19 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 						L10S.append("'").append(std::to_string(nSumLong - nSumShort)).append("',");
 						for (size_t i = 11; i <= 20; i++)
 						{
+							if (svv3.at(0).at(nIndexLong + i).compare("名次") == 0)
+							{
+								break;
+							}
 							//printf("[long]i=%d,%s\n", i, svv3.at(2).at(nIndexLong + i).c_str());
 							nSumLong += std::stoi(svv3.at(2).at(nIndexLong + i).c_str());
 						}
 						for (size_t i = 11; i <= 20; i++)
 						{
+							if (svv3.at(0).at(nIndexShort + i).compare("名次") == 0)
+							{
+								break;
+							}
 							//printf("[short]i=%d,%s\n", i, svv3.at(2).at(nIndexShort + i).c_str());
 							nSumShort += std::stoi(svv3.at(2).at(nIndexShort + i).c_str());
 						}
