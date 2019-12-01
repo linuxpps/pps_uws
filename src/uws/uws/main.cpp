@@ -412,11 +412,11 @@ std::string shfe_chart(const std::string& product_name, const std::string& date,
 			size_t out_len = out.size();
 			flag = gb2312_to_utf8((char*)data.c_str(), &in_len, (char*)out.c_str(), &out_len);
 			string_replace_all(data, "", " ");
-			printf("flag = %d\n", flag);
+			//printf("flag = %d\n", flag);
 			flag = string_regex_find(result, svv1, out.c_str(), pattern1);
-			printf("flag = %d\n", flag);
+			//printf("flag = %d\n", flag);
 			int nIndex1 = (-1);
-			printf("svv1->size=%d,svv1->begin()->size=%d\n", svv1.size(), svv1.begin()->size());
+			//printf("svv1->size=%d,svv1->begin()->size=%d\n", svv1.size(), svv1.begin()->size());
 			if (svv1.size())
 			{
 				for (size_t i = 0; i < svv1.at(0).size(); i++)
