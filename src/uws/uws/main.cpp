@@ -21,6 +21,9 @@
 
 #define ATTACH_ABORT_HANDLE(res) res->onAborted([]() {std::cout << "ABORTED!" << std::endl;})
 
+#define ROUTE_HTTP_HELLO	"/hello"
+#define ROUTE_HTTP_CHART	"/chart"
+
 bool is_trade_day(const time_t& tt)
 {
 	struct tm* ptm = localtime(&tt);
@@ -631,12 +634,12 @@ int main(int argc, char** argv)
 						ATTACH_ABORT_HANDLE(res);
 
 						std::string_view url = req->getUrl();
-						if (std::string(url.data(), url.length()).compare(0, strlen("/hello"), "/hello") == 0)
+						if (std::string(url.data(), url.length()).compare(0, strlen(ROUTE_HTTP_HELLO), ROUTE_HTTP_HELLO) == 0)
 						{
 							/* You can efficiently stream huge files too */
 							res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("Hello HTTP!");
 						}
-						else if(std::string(url.data(), url.length()).compare(0, strlen("/chart") , "/chart") == 0)
+						else if(std::string(url.data(), url.length()).compare(0, strlen(ROUTE_HTTP_CHART) , ROUTE_HTTP_CHART) == 0)
 						{
 							//printf("==%.*s\n", url.length(), url.data());
 							std::string_view query = req->getQuery();
