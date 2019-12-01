@@ -21,9 +21,12 @@
 
 #define ATTACH_ABORT_HANDLE(res) res->onAborted([]() {std::cout << "ABORTED!" << std::endl;})
 
-#define ROUTE_HTTP_HELLO		"/hello"
-#define ROUTE_HTTP_CHART		"/chart"
-#define ROUTE_HTTP_CHART_SHFE	"/chart-shfe"
+#define ROUTE_HTTP_HELLO			"/hello"
+#define ROUTE_HTTP_INDEX			"/index"
+#define ROUTE_HTTP_CHART_DCE		"/chart-dce"
+#define ROUTE_HTTP_CHART_DCE_LIST	"/chart-dce-list"
+#define ROUTE_HTTP_CHART_SHFE		"/chart-shfe"
+#define ROUTE_HTTP_CHART_SHFE_LIST	"/chart-shfe-list"
 
 bool is_trade_day(const time_t& tt)
 {
@@ -71,7 +74,7 @@ void calc_date_list(std::map<std::string, std::string>& umap, const std::string 
 	}
 	
 }
-std::string dce_chart(const std::string& product_name, const std::string& date, int count)
+std::string dce_chart(const std::string& product_name, const std::string& date, int count, bool bGetCode = false)
 {
 	std::string T = "";
 	std::string X = "";
@@ -124,6 +127,20 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 			//printf("svv1->size=%d,svv1->begin()->size=%d\n", svv1.size(), svv1.begin()->size());
 			if (svv1.size())
 			{
+				if (bGetCode)
+				{
+					std::string code_list("[");
+					for (size_t i = 0; i < svv1.at(0).size(); i++)
+					{
+						if (i > 0)
+						{
+							code_list.append(",");
+						}
+						code_list.append("\"").append(svv1.at(0).at(i)).append("\"");
+					}
+					code_list.append("]");
+					return code_list;
+				}
 				for (size_t i = 0; i < svv1.at(0).size(); i++)
 				{
 					if (svv1.at(0).at(i).compare(product_name) == 0)
@@ -356,6 +373,7 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 	}
 	std::string temp;
 	file_reader(temp, "chart.html");
+	string_replace_all(temp, "dce", "VVVVVV");
 	string_replace_all(temp, X, "XXXXXX");
 	string_replace_all(temp, L5, "LLL5LLL");
 	string_replace_all(temp, S5, "SSS5SSS");
@@ -369,7 +387,7 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 	//file_writer(temp, T + ".html");
 	return temp;
 }
-std::string shfe_chart(const std::string& product_name, const std::string& date, int count)
+std::string shfe_chart(const std::string& product_name, const std::string& date, int count, bool bGetCode = false)
 {
 	std::string T = "";
 	std::string X = "";
@@ -411,7 +429,23 @@ std::string shfe_chart(const std::string& product_name, const std::string& date,
 			size_t in_len = data.size();
 			size_t out_len = out.size();
 			flag = gb2312_to_utf8((char*)data.c_str(), &in_len, (char*)out.c_str(), &out_len);
-			string_replace_all(data, "", " ");
+			string_replace_all(out, "", " ");
+			if (bGetCode)
+			{
+				std::string pattern = "合计:(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?)\r\n";
+				flag = string_regex_find(result, svv1, out.c_str(), pattern);
+				std::string code_list("[");
+				for (size_t i = 0; i < svv1.at(0).size(); i++)
+				{
+					if (i > 0)
+					{
+						code_list.append(",");
+					}
+					code_list.append("\"").append(svv1.at(0).at(i)).append("\"");
+				}
+				code_list.append("]");
+				return code_list;
+			}
 			//printf("flag = %d\n", flag);
 			flag = string_regex_find(result, svv1, out.c_str(), pattern1);
 			//printf("flag = %d\n", flag);
@@ -590,6 +624,7 @@ std::string shfe_chart(const std::string& product_name, const std::string& date,
 	}
 	std::string temp;
 	file_reader(temp, "chart.html");
+	string_replace_all(temp, "shfe", "VVVVVV");
 	string_replace_all(temp, X, "XXXXXX");
 	string_replace_all(temp, L5, "LLL5LLL");
 	string_replace_all(temp, S5, "SSS5SSS");
@@ -865,7 +900,7 @@ int main(int argc, char** argv)
 							std::cout << "Close:" << code << std::endl;
 						}
 					})
-					.get("/*", [&asyncFileStreamer](auto* res, auto* req) {
+					.get("/*", [&asyncFileStreamer, root](auto* res, auto* req) {
 						ATTACH_ABORT_HANDLE(res);
 
 						std::string_view url = req->getUrl();
@@ -874,7 +909,7 @@ int main(int argc, char** argv)
 							/* You can efficiently stream huge files too */
 							res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("Hello HTTP!");
 						}
-						else if(std::string(url.data(), url.length()).compare(0, url.length(), ROUTE_HTTP_CHART) == 0)
+						else if (std::string(url.data(), url.length()).compare(0, url.length(), ROUTE_HTTP_CHART_DCE) == 0)
 						{
 							//printf("==%.*s\n", url.length(), url.data());
 							std::string_view query = req->getQuery();
@@ -903,6 +938,51 @@ int main(int argc, char** argv)
 										res->writeHeader("Content-Type", "text/html; charset=utf-8")->end(dce_chart(product_name, date, std::stoi(days)).c_str());
 									}*/
 									res->writeHeader("Content-Type", "text/html; charset=utf-8")->end(dce_chart(product_name, date, std::stoi(days)).c_str());
+								}
+								catch (const std::exception & e)
+								{
+									std::cout << "Exception:" << e.what() << std::endl;
+									res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("param error!");
+								}
+							}
+							else
+							{
+								res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("param error!");
+							}
+							std::chrono::steady_clock::time_point e = std::chrono::steady_clock::now();
+							std::cout << "Printing took "
+								<< std::chrono::duration_cast<std::chrono::microseconds>(e - s).count()
+								<< "us.\n";
+						}
+						else if (std::string(url.data(), url.length()).compare(0, url.length(), ROUTE_HTTP_CHART_DCE_LIST) == 0)
+						{
+							//printf("==%.*s\n", url.length(), url.data());
+							std::string_view query = req->getQuery();
+							//printf("==%.*s\n", query.length(), query.data());
+							std::string product_name = "";
+							std::string date = "";
+							std::string days = "";
+							std::string result = "";
+							std::vector<std::vector<std::string>> svv;
+							std::chrono::steady_clock::time_point s = std::chrono::steady_clock::now();
+							string_regex_find(result, svv, std::string(query.data(), query.length()), "p=(.*?)&d=(.*?)&c=(.*+)");
+							if (svv.size() > 0)
+							{
+								product_name = svv.at(0).at(0);
+								date = svv.at(1).at(0);
+								days = svv.at(2).at(0);
+								try
+								{
+									/*if (std::stoi(days) > 31)
+									{
+										res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("param error!days cannot more than 31");
+									}
+									else
+									{
+										//printf("{==%.*s==%.*s==%.*s}\n", product_name.length(), product_name.data(), date.length(), date.data(), days.length(), days.data());
+										res->writeHeader("Content-Type", "text/html; charset=utf-8")->end(dce_chart(product_name, date, std::stoi(days)).c_str());
+									}*/
+									res->writeHeader("Content-Type", "application/json; charset=utf-8")->end(dce_chart(product_name, date, std::stoi(days), true).c_str());
 								}
 								catch (const std::exception & e)
 								{
@@ -949,6 +1029,67 @@ int main(int argc, char** argv)
 							else
 							{
 								res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("param error!");
+							}
+							std::chrono::steady_clock::time_point e = std::chrono::steady_clock::now();
+							std::cout << "Printing took "
+								<< std::chrono::duration_cast<std::chrono::microseconds>(e - s).count()
+								<< "us.\n";
+						}
+						else if (std::string(url.data(), url.length()).compare(0, url.length(), ROUTE_HTTP_CHART_SHFE_LIST) == 0)
+						{
+							//printf("==%.*s\n", url.length(), url.data());
+							std::string_view query = req->getQuery();
+							//printf("==%.*s\n", query.length(), query.data());
+							std::string product_name = "";
+							std::string date = "";
+							std::string days = "";
+							std::string result = "";
+							std::vector<std::vector<std::string>> svv;
+							std::chrono::steady_clock::time_point s = std::chrono::steady_clock::now();
+							string_regex_find(result, svv, std::string(query.data(), query.length()), "p=(.*?)&d=(.*?)&c=(.*+)");
+							if (svv.size() > 0)
+							{
+								product_name = svv.at(0).at(0);
+								date = svv.at(1).at(0);
+								days = svv.at(2).at(0);
+								try
+								{
+									res->writeHeader("Content-Type", "application/json; charset=utf-8")->end(shfe_chart(product_name, date, std::stoi(days), true).c_str());
+								}
+								catch (const std::exception & e)
+								{
+									std::cout << "Exception:" << e.what() << std::endl;
+									res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("param error!");
+								}
+							}
+							else
+							{
+								res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("param error!");
+							}
+							std::chrono::steady_clock::time_point e = std::chrono::steady_clock::now();
+							std::cout << "Printing took "
+								<< std::chrono::duration_cast<std::chrono::microseconds>(e - s).count()
+								<< "us.\n";
+						}
+						else if (std::string(url.data(), url.length()).compare(0, url.length(), ROUTE_HTTP_INDEX) == 0)
+						{
+							printf("==%.*s\n", url.length(), url.data());
+							std::string_view query = req->getQuery();
+							//printf("==%.*s\n", query.length(), query.data());
+							std::string result = "";
+							std::chrono::steady_clock::time_point s = std::chrono::steady_clock::now();
+							file_reader(result, root + std::string(url.data(), url.length()) + ".html");
+							if (result.length() <= 0)
+							{
+								#define FMT_404 "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\"><html><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL %.*s was not found on this server.</p></body></html>"
+								char RES_404[SHRT_MAX] = { 0 };
+								std::cout << "Did not find file: " << url << std::endl;
+								snprintf(RES_404, sizeof(RES_404), FMT_404, url.length(), url.data());
+								res->writeHeader("Content-Type", "text/html; charset=utf-8")->end(std::string_view(RES_404, strlen(RES_404)));
+							}
+							else
+							{
+								res->writeHeader("Content-Type", "text/html; charset=utf-8")->end(result);
 							}
 							std::chrono::steady_clock::time_point e = std::chrono::steady_clock::now();
 							std::cout << "Printing took "

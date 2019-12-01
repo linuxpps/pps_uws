@@ -81,6 +81,9 @@
     <Filter Include="uws\d3">
       <UniqueIdentifier>{099ae7eb-b0c8-4b16-9aed-19cc66580216}</UniqueIdentifier>
     </Filter>
+    <Filter Include="uws\js">
+      <UniqueIdentifier>{230806ec-60bd-431f-a606-587024797865}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\uWebSockets\src\App.h">
@@ -330,6 +333,18 @@
       <Filter>uws</Filter>
     </None>
     <None Include="cffex.csv">
+      <Filter>uws</Filter>
+    </None>
+    <None Include="js\jquery-3.4.1.js">
+      <Filter>uws\js</Filter>
+    </None>
+    <None Include="js\jquery-3.4.1.min.js">
+      <Filter>uws\js</Filter>
+    </None>
+    <None Include="js\jquery-3.4.1.min.map">
+      <Filter>uws\js</Filter>
+    </None>
+    <None Include="index.html">
       <Filter>uws</Filter>
     </None>
   </ItemGroup>
