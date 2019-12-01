@@ -21,8 +21,9 @@
 
 #define ATTACH_ABORT_HANDLE(res) res->onAborted([]() {std::cout << "ABORTED!" << std::endl;})
 
-#define ROUTE_HTTP_HELLO	"/hello"
-#define ROUTE_HTTP_CHART	"/chart"
+#define ROUTE_HTTP_HELLO		"/hello"
+#define ROUTE_HTTP_CHART		"/chart"
+#define ROUTE_HTTP_CHART_SHFE	"/chart-shfe"
 
 bool is_trade_day(const time_t& tt)
 {
@@ -267,6 +268,240 @@ std::string dce_chart(const std::string& product_name, const std::string& date, 
 						it.second = svv2.at(0).at(nIndex2 + 2);
 						S20.append("'").append(svv2.at(0).at(nIndex2 + 2)).append("',");
 					}*/
+				}
+			}
+		}
+	}
+
+	if (X.length() > 1)
+	{
+		*X.rbegin() = ']';
+	}
+	else
+	{
+		X.append("]");
+	}
+	if (L5.length() > 1)
+	{
+		*L5.rbegin() = ']';
+	}
+	else
+	{
+		L5.append("]");
+	}
+	if (S5.length() > 1)
+	{
+		*S5.rbegin() = ']';
+	}
+	else
+	{
+		S5.append("]");
+	}
+	if (L10.length() > 1)
+	{
+		*L10.rbegin() = ']';
+	}
+	else
+	{
+		L10.append("]");
+	}
+	if (S10.length() > 1)
+	{
+		*S10.rbegin() = ']';
+	}
+	else
+	{
+		S10.append("]");
+	}
+	if (L20.length() > 1)
+	{
+		*L20.rbegin() = ']';
+	}
+	else
+	{
+		L20.append("]");
+	}
+	if (S20.length() > 1)
+	{
+		*S20.rbegin() = ']';
+	}
+	else
+	{
+		S20.append("]");
+	}
+
+	if (L5S.length() > 1)
+	{
+		*L5S.rbegin() = ']';
+	}
+	else
+	{
+		L5S.append("]");
+	}
+	if (L10S.length() > 1)
+	{
+		*L10S.rbegin() = ']';
+	}
+	else
+	{
+		L10S.append("]");
+	}
+	if (L20S.length() > 1)
+	{
+		*L20S.rbegin() = ']';
+	}
+	else
+	{
+		L20S.append("]");
+	}
+	std::string temp;
+	file_reader(temp, "chart.html");
+	string_replace_all(temp, X, "XXXXXX");
+	string_replace_all(temp, L5, "LLL5LLL");
+	string_replace_all(temp, S5, "SSS5SSS");
+	string_replace_all(temp, L10, "LLL10LLL");
+	string_replace_all(temp, S10, "SSS10SSS");
+	string_replace_all(temp, L20, "LLL20LLL");
+	string_replace_all(temp, S20, "SSS20SSS");
+	string_replace_all(temp, L5S, "LLL5SSS");
+	string_replace_all(temp, L10S, "LLL10SSS");
+	string_replace_all(temp, L20S, "LLL20SSS");
+	//file_writer(temp, T + ".html");
+	return temp;
+}
+std::string shfe_chart(const std::string& product_name, const std::string& date, int count)
+{
+	std::string T = "";
+	std::string X = "";
+	std::string L5 = "";
+	std::string S5 = "";
+	std::string L10 = "";
+	std::string S10 = "";
+	std::string L20 = "";
+	std::string S20 = "";
+	std::string L5S = "";
+	std::string L10S = "";
+	std::string L20S = "";
+	std::map<std::string, std::string> umap;
+	setlocale(LC_ALL, "chs");
+	calc_date_list(umap, date, count);
+	X.append("[");
+	L5.append("[");
+	S5.append("[");
+	L10.append("[");
+	S10.append("[");
+	L20.append("[");
+	S20.append("[");
+	L5S.append("[");
+	L10S.append("[");
+	L20S.append("[");
+	for (auto& it : umap)
+	{
+		std::string data("");
+		//file_reader(data, "./dce.csv");
+		file_reader(data, "/usr/share/nginx/html/foot-wash/storage/app/images/edc/" + it.first + "/shfe.csv");
+		//file_reader(data, "./" + it.first + "/dce.csv");
+		if (data.length() > 0)
+		{
+			bool flag = false;
+			std::string result("");
+			std::string pattern1 = "(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?)\r\n";
+			std::vector<std::vector<std::string>> svv1;
+			std::string out(data.size() * 4, '\0');
+			size_t in_len = data.size();
+			size_t out_len = out.size();
+			flag = gb2312_to_utf8((char*)data.c_str(), &in_len, (char*)out.c_str(), &out_len);
+			string_replace_all(data, "", " ");
+			printf("flag = %d\n", flag);
+			flag = string_regex_find(result, svv1, out.c_str(), pattern1);
+			printf("flag = %d\n", flag);
+			int nIndex1 = (-1);
+			printf("svv1->size=%d,svv1->begin()->size=%d\n", svv1.size(), svv1.begin()->size());
+			if (svv1.size())
+			{
+				for (size_t i = 0; i < svv1.at(0).size(); i++)
+				{
+					if (svv1.at(0).at(i).find(product_name) != std::string::npos)
+					{
+						nIndex1 = i;
+						break;
+					}
+				}
+				if (nIndex1 >= 0 && nIndex1 < svv1.at(0).size())
+				{
+					// 2-多单手数
+					// 3-变化手数
+					int nChangeIndex = 1;
+					T = svv1.at(0).at(nIndex1).c_str();
+					//printf("%s,%s\n", svv1.at(0).at(nIndex1).c_str(), svv1.at(1).at(nIndex1).c_str());
+					X.append("'").append(it.first).append("',");
+
+					int nSumLong = 0;
+					int nSumShort = 0;
+					for (size_t i = nIndex1 + 1; i < svv1.at(0).size(); i++)
+					{
+						if (svv1.at(0).at(i).compare(0, strlen("合计"), "合计") == 0)
+						{
+							if (nIndex1 + 5 > i)
+							{
+								//持买量
+								S5.append("'").append(std::to_string(nSumShort)).append("',");
+								//持卖量
+								L5.append("'").append(std::to_string(nSumLong)).append("',");
+								//持买量-持卖量
+								L5S.append("'").append(std::to_string(nSumLong - nSumShort)).append("',");
+							}
+							else if (nIndex1 + 10 > i)
+							{
+								//持买量
+								S10.append("'").append(std::to_string(nSumShort)).append("',");
+								//持卖量
+								L10.append("'").append(std::to_string(nSumLong)).append("',");
+								//持买量-持卖量
+								L10S.append("'").append(std::to_string(nSumLong - nSumShort)).append("',");
+							}
+							else if (nIndex1 + 20 > i)
+							{
+								//持买量
+								S20.append("'").append(std::to_string(nSumShort)).append("',");
+								//持卖量
+								L20.append("'").append(std::to_string(nSumLong)).append("',");
+								//持买量-持卖量
+								L20S.append("'").append(std::to_string(nSumLong - nSumShort)).append("',");
+							}
+							break;
+						}
+
+						nSumLong += std::stoi(svv1.at(7).at(i).c_str());
+						nSumShort += std::stoi(svv1.at(11).at(i).c_str());
+						if (nIndex1 + 5 == i)
+						{
+							//持买量
+							S5.append("'").append(std::to_string(nSumShort)).append("',");
+							//持卖量
+							L5.append("'").append(std::to_string(nSumLong)).append("',");
+							//持买量-持卖量
+							L5S.append("'").append(std::to_string(nSumLong - nSumShort)).append("',");
+						}
+						else if (nIndex1 + 10 == i)
+						{
+							//持买量
+							S10.append("'").append(std::to_string(nSumShort)).append("',");
+							//持卖量
+							L10.append("'").append(std::to_string(nSumLong)).append("',");
+							//持买量-持卖量
+							L10S.append("'").append(std::to_string(nSumLong - nSumShort)).append("',");
+						}
+						else if (nIndex1 + 20 == i)
+						{
+							//持买量
+							S20.append("'").append(std::to_string(nSumShort)).append("',");
+							//持卖量
+							L20.append("'").append(std::to_string(nSumLong)).append("',");
+							//持买量-持卖量
+							L20S.append("'").append(std::to_string(nSumLong - nSumShort)).append("',");
+						}
+					}
 				}
 			}
 		}
@@ -639,7 +874,7 @@ int main(int argc, char** argv)
 							/* You can efficiently stream huge files too */
 							res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("Hello HTTP!");
 						}
-						else if(std::string(url.data(), url.length()).compare(0, strlen(ROUTE_HTTP_CHART) , ROUTE_HTTP_CHART) == 0)
+						else if(std::string(url.data(), url.length()).compare(0, url.length(), ROUTE_HTTP_CHART) == 0)
 						{
 							//printf("==%.*s\n", url.length(), url.data());
 							std::string_view query = req->getQuery();
@@ -668,6 +903,42 @@ int main(int argc, char** argv)
 										res->writeHeader("Content-Type", "text/html; charset=utf-8")->end(dce_chart(product_name, date, std::stoi(days)).c_str());
 									}*/
 									res->writeHeader("Content-Type", "text/html; charset=utf-8")->end(dce_chart(product_name, date, std::stoi(days)).c_str());
+								}
+								catch (const std::exception & e)
+								{
+									std::cout << "Exception:" << e.what() << std::endl;
+									res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("param error!");
+								}
+							}
+							else
+							{
+								res->writeHeader("Content-Type", "text/html; charset=utf-8")->end("param error!");
+							}
+							std::chrono::steady_clock::time_point e = std::chrono::steady_clock::now();
+							std::cout << "Printing took "
+								<< std::chrono::duration_cast<std::chrono::microseconds>(e - s).count()
+								<< "us.\n";
+						}
+						else if (std::string(url.data(), url.length()).compare(0, url.length(), ROUTE_HTTP_CHART_SHFE) == 0)
+						{
+							//printf("==%.*s\n", url.length(), url.data());
+							std::string_view query = req->getQuery();
+							//printf("==%.*s\n", query.length(), query.data());
+							std::string product_name = "";
+							std::string date = "";
+							std::string days = "";
+							std::string result = "";
+							std::vector<std::vector<std::string>> svv;
+							std::chrono::steady_clock::time_point s = std::chrono::steady_clock::now();
+							string_regex_find(result, svv, std::string(query.data(), query.length()), "p=(.*?)&d=(.*?)&c=(.*+)");
+							if (svv.size() > 0)
+							{
+								product_name = svv.at(0).at(0);
+								date = svv.at(1).at(0);
+								days = svv.at(2).at(0);
+								try
+								{
+									res->writeHeader("Content-Type", "text/html; charset=utf-8")->end(shfe_chart(product_name, date, std::stoi(days)).c_str());
 								}
 								catch (const std::exception & e)
 								{

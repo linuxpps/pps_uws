@@ -323,6 +323,15 @@
     <None Include="d3\d3.min.js">
       <Filter>uws\d3</Filter>
     </None>
+    <None Include="shfe.csv">
+      <Filter>uws</Filter>
+    </None>
+    <None Include="czce.csv">
+      <Filter>uws</Filter>
+    </None>
+    <None Include="cffex.csv">
+      <Filter>uws</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="favicon.ico">

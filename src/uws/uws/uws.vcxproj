@@ -163,10 +163,13 @@
     <None Include="..\setup_deps.bat" />
     <None Include="..\uWebSockets\Makefile" />
     <None Include="..\uWebSockets\uSockets\Makefile" />
+    <None Include="cffex.csv" />
     <None Include="chart.html" />
+    <None Include="czce.csv" />
     <None Include="d3\d3.js" />
     <None Include="d3\d3.min.js" />
     <None Include="dce.csv" />
+    <None Include="shfe.csv" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="favicon.ico" />
