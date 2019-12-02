@@ -467,7 +467,7 @@ std::string shfe_chart(const std::string& product_name, const std::string& date,
 					// 3-变化手数
 					int nChangeIndex = 1;
 					T = svv1.at(0).at(nIndex1).c_str();
-					//printf("%s,%s\n", svv1.at(0).at(nIndex1).c_str(), svv1.at(1).at(nIndex1).c_str());
+					//printf("nIndex1=%d,%s,%s\n", nIndex1, svv1.at(0).at(nIndex1).c_str(), svv1.at(1).at(nIndex1).c_str());
 					X.append("'").append(it.first).append("',");
 
 					int nSumLong = 0;
@@ -505,7 +505,8 @@ std::string shfe_chart(const std::string& product_name, const std::string& date,
 							}
 							break;
 						}
-
+						//std::cout << i << ",7," << svv1.at(7).at(i).c_str() << std::endl;
+						//std::cout << i << ",11," << svv1.at(11).at(i).c_str() << std::endl;
 						nSumLong += std::stoi(svv1.at(7).at(i).c_str());
 						nSumShort += std::stoi(svv1.at(11).at(i).c_str());
 						if (nIndex1 + 5 == i)
