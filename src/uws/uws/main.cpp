@@ -420,9 +420,9 @@ std::string czce_chart(const std::string& product_name, const std::string& date,
 	for (auto& it : umap)
 	{
 		std::string data("");
-		//file_reader(data, "./dce.csv");
-		//file_reader(data, "/usr/share/nginx/html/foot-wash/storage/app/images/edc/" + it.first + "/czce.csv");
-		file_reader(data, "./" + it.first + "/czce.csv");
+		//file_reader(data, "./czce.csv");
+		file_reader(data, "/usr/share/nginx/html/foot-wash/storage/app/images/edc/" + it.first + "/czce.csv");
+		//file_reader(data, "./" + it.first + "/czce.csv");
 		if (data.length() > 0)
 		{
 			bool flag = false;
@@ -466,11 +466,11 @@ std::string czce_chart(const std::string& product_name, const std::string& date,
 				code_list.append("]");
 				return code_list;
 			}
-			printf("flag = %d\n", flag);
+			//printf("flag = %d\n", flag);
 			flag = string_regex_find(result, svv1, out.c_str(), pattern1);
-			printf("flag = %d\n", flag);
+			//printf("flag = %d\n", flag);
 			int nIndex1 = (-1);
-			printf("svv1->size=%d,svv1->begin()->size=%d\n", svv1.size(), svv1.begin()->size());
+			//printf("svv1->size=%d,svv1->begin()->size=%d\n", svv1.size(), svv1.begin()->size());
 			if (svv1.size())
 			{
 				for (size_t i = 0; i < svv1.at(0).size(); i++)
@@ -487,7 +487,7 @@ std::string czce_chart(const std::string& product_name, const std::string& date,
 					// 3-变化手数
 					int nChangeIndex = 1;
 					T = svv1.at(0).at(nIndex1).c_str();
-					printf("nIndex1=%d,%s,%s\n", nIndex1, svv1.at(0).at(nIndex1).c_str(), svv1.at(1).at(nIndex1).c_str());
+					//printf("nIndex1=%d,%s,%s\n", nIndex1, svv1.at(0).at(nIndex1).c_str(), svv1.at(1).at(nIndex1).c_str());
 					X.append("'").append(it.first).append("',");
 
 					int nSumLong = 0;
@@ -949,9 +949,9 @@ std::string cffex_chart(const std::string& product_name, const std::string& date
 	for (auto& it : umap)
 	{
 		std::string data("");
-		//file_reader(data, "./dce.csv");
-		//file_reader(data, "/usr/share/nginx/html/foot-wash/storage/app/images/edc/" + it.first + "/cffex.csv");
-		file_reader(data, "./" + it.first + "/cffex.csv");
+		//file_reader(data, "./cffex.csv");
+		file_reader(data, "/usr/share/nginx/html/foot-wash/storage/app/images/edc/" + it.first + "/cffex.csv");
+		//file_reader(data, "./" + it.first + "/cffex.csv");
 		if (data.length() > 0)
 		{
 			bool flag = false;
@@ -1265,7 +1265,50 @@ rapidjson::Value& body_to_json(rapidjson::Document& d, const std::string& strDat
 	}
 	return v;
 }
+std::string url_decode(const std::string& encode)
+{
+	//std::string encode = "%25aa%E6%A3%89%E8%8A%B1CF";
+	std::string decode = "";
+	std::string::size_type start_pos = 0;
+	std::string::size_type final_pos = 0;
+	std::string::size_type count_pos = encode.size();
+	while (final_pos < count_pos)
+	{
+		if ((start_pos = encode.find('%', final_pos)) != std::string::npos)
+		{
+			decode.append(encode.substr(final_pos, start_pos - final_pos));
+			final_pos = start_pos;
+			if (final_pos + 3 < count_pos)
+			{
+				char ch1 = encode.at(final_pos + 1);
+				char ch2 = encode.at(final_pos + 2);
+				if ((
+					(ch1 >= '0' && ch1 <= '9') ||
+					(ch1 >= 'a' && ch1 <= 'f') ||
+					(ch1 >= 'A' && ch1 <= 'F'))
+					&&
+					(
+					(ch2 >= '0' && ch2 <= '9') ||
+						(ch2 >= 'a' && ch2 <= 'f') ||
+						(ch2 >= 'A' && ch2 <= 'F'))
+					)
+				{
+					decode.append(1, (uint8_t)std::stoi(encode.substr(final_pos + 1, 2), nullptr, 0x10));
+				}
+				else
+				{
+					decode.append(encode.substr(final_pos, 3));
+				}
+				final_pos = final_pos + 3;
+				continue;
+			}
+		}
 
+		decode.append(encode.substr(final_pos));
+		break;
+	}
+	return decode;
+}
 int main(int argc, char** argv)
 {
 	//test_chart();
@@ -1562,11 +1605,12 @@ int main(int argc, char** argv)
 								string_regex_find(result, svv, std::string(query.data(), query.length()), "p=(.*?)&d=(.*?)&c=(.*+)");
 								if (svv.size() > 0)
 								{
-									product_name = svv.at(0).at(0);
+									product_name = url_decode(svv.at(0).at(0));
+									
 									date = svv.at(1).at(0);
 									days = svv.at(2).at(0);
 
-									printf("==%s==%s==%s\n", product_name.data(), date.data(), days.data());
+									//printf("==%s==%s==%s\n", product_name.data(), date.data(), days.data());
 									try
 									{
 										/*if (std::stoi(days) > 31)
