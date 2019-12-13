@@ -14,9 +14,9 @@ struct AsyncFileStreamer {
         // todo: if the root folder changes, we want to reload the cache
         for(auto &p : std::filesystem::recursive_directory_iterator(root)) {
             std::string url = p.path().string().substr(root.length());
-            if (url == "/index.html") {
-                url = "/";
-            }
+            //if (url == "/index.html") {
+            //    url = "/";
+            //}
 
             char *key = new char[url.length()];
             memcpy(key, url.data(), url.length());
