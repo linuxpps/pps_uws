@@ -188,7 +188,7 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>cp ./bin/$(Platform)/$(Configuration)/uws.out ./index.html ./chart.html ./js ./d3 ./favicon.ico ../bin/$(Platform)/$(Configuration)/ -rf</Command>
+      <Command>mkdir -p ../bin/$(Platform)/$(Configuration)/ &amp;&amp; cp ./bin/$(Platform)/$(Configuration)/uws.out ./index.html ./chart.html ./js ./d3 ./favicon.ico ../bin/$(Platform)/$(Configuration)/ -rf</Command>
     </RemotePostBuildEvent>
     <RemotePreBuildEvent>
       <Command>
@@ -205,7 +205,7 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>cp ./bin/$(Platform)/$(Configuration)/uws.out ./index.html ./chart.html ./js ./d3 ./favicon.ico ../bin/$(Platform)/$(Configuration)/ -rf</Command>
+      <Command>mkdir -p ../bin/$(Platform)/$(Configuration)/ &amp;&amp; cp ./bin/$(Platform)/$(Configuration)/uws.out ./index.html ./chart.html ./js ./d3 ./favicon.ico ../bin/$(Platform)/$(Configuration)/ -rf</Command>
     </RemotePostBuildEvent>
     <RemotePreBuildEvent>
       <Command>
@@ -222,7 +222,7 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>cp ./bin/$(Platform)/$(Configuration)/uws.out ./index.html ./chart.html ./js ./d3 ./favicon.ico ../bin/$(Platform)/$(Configuration)/ -rf</Command>
+      <Command>mkdir -p ../bin/$(Platform)/$(Configuration)/ &amp;&amp; cp ./bin/$(Platform)/$(Configuration)/uws.out ./index.html ./chart.html ./js ./d3 ./favicon.ico ../bin/$(Platform)/$(Configuration)/ -rf</Command>
     </RemotePostBuildEvent>
     <RemotePreBuildEvent>
       <Command>
@@ -239,7 +239,7 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>cp ./bin/$(Platform)/$(Configuration)/uws.out ./index.html ./chart.html ./js ./d3 ./favicon.ico ../bin/$(Platform)/$(Configuration)/ -rf</Command>
+      <Command>mkdir -p ../bin/$(Platform)/$(Configuration)/ &amp;&amp; cp ./bin/$(Platform)/$(Configuration)/uws.out ./index.html ./chart.html ./js ./d3 ./favicon.ico ../bin/$(Platform)/$(Configuration)/ -rf</Command>
     </RemotePostBuildEvent>
     <RemotePreBuildEvent>
       <Command>
@@ -256,7 +256,7 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>cp ./bin/$(Platform)/$(Configuration)/uws.out ./index.html ./chart.html ./js ./d3 ./favicon.ico ../bin/$(Platform)/$(Configuration)/ -rf</Command>
+      <Command>mkdir -p ../bin/$(Platform)/$(Configuration)/ &amp;&amp; cp ./bin/$(Platform)/$(Configuration)/uws.out ./index.html ./chart.html ./js ./d3 ./favicon.ico ../bin/$(Platform)/$(Configuration)/ -rf</Command>
     </RemotePostBuildEvent>
     <RemotePreBuildEvent>
       <Command>
@@ -273,7 +273,7 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>cp ./bin/$(Platform)/$(Configuration)/uws.out ./index.html ./chart.html ./js ./d3 ./favicon.ico ../bin/$(Platform)/$(Configuration)/ -rf</Command>
+      <Command>mkdir -p ../bin/$(Platform)/$(Configuration)/ &amp;&amp; cp ./bin/$(Platform)/$(Configuration)/uws.out ./index.html ./chart.html ./js ./d3 ./favicon.ico ../bin/$(Platform)/$(Configuration)/ -rf</Command>
     </RemotePostBuildEvent>
     <RemotePreBuildEvent>
       <Command>
@@ -290,7 +290,7 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>cp ./bin/$(Platform)/$(Configuration)/uws.out ./index.html ./chart.html ./js ./d3 ./favicon.ico ../bin/$(Platform)/$(Configuration)/ -rf</Command>
+      <Command>mkdir -p ../bin/$(Platform)/$(Configuration)/ &amp;&amp; cp ./bin/$(Platform)/$(Configuration)/uws.out ./index.html ./chart.html ./js ./d3 ./favicon.ico ../bin/$(Platform)/$(Configuration)/ -rf</Command>
     </RemotePostBuildEvent>
     <RemotePreBuildEvent>
       <Command>
@@ -307,7 +307,7 @@
       <LibraryDependencies>uv;pthread;stdc++fs;z;</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>cp ./bin/$(Platform)/$(Configuration)/uws.out ./index.html ./chart.html ./js ./d3 ./favicon.ico ../bin/$(Platform)/$(Configuration)/ -rf</Command>
+      <Command>mkdir -p ../bin/$(Platform)/$(Configuration)/ &amp;&amp; cp ./bin/$(Platform)/$(Configuration)/uws.out ./index.html ./chart.html ./js ./d3 ./favicon.ico ../bin/$(Platform)/$(Configuration)/ -rf</Command>
     </RemotePostBuildEvent>
     <RemotePreBuildEvent>
       <Command>
